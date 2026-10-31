@@ -13,3 +13,16 @@ Most running watches and apps already give live heart rate feedback, but they re
 This project streams heart rate and HRV from the Polar H10 chest strap to your iPhone and adapts its audio feedback to your current state.
 
 ---
+
+## What This App Does
+
+The app connects to a Bluetooth chest strap, streams your heart rate and RR intervals, and continuously evaluates your current physiological state. Based on that, it gives you audio feedback through your headphones and tells you to speed up or slow down to stay in your target zone.
+
+The feedback isn't just "go faster". It takes into account where you are in your session, how your HRV is trending, and what kind of training you're doing. Three feedback strategies are implemented and compared in field tests.
+
+- **Static** uses fixed zone thresholds and simple rules.
+- **Contextual** reacts to short term HRV changes during the session.
+- **Personalized** adapts the thresholds to the individual runner.
+
+---
+
