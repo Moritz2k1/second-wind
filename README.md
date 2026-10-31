@@ -26,3 +26,22 @@ The feedback isn't just "go faster". It takes into account where you are in your
 
 ---
 
+## Hardware
+
+- **Polar H10** chest strap (or any BLE device implementing the standard Heart Rate Profile)
+- iPhone (iOS 16+)
+- AirPods or any headphones for audio feedback
+
+---
+
+## Tech Stack
+
+- **Swift / SwiftUI** — UI and app logic
+- **Core Bluetooth** — direct BLE communication, no third-party SDK dependencies
+- **AVSpeechSynthesizer** — voice feedback delivered through headphones
+- **CoreML** — on-device ML inference for training state classification
+
+---
+
+## How It Works
+
