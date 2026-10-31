@@ -88,3 +88,32 @@ Every second, the app checks whether you are in your target zone. If you have be
 
 A configurable cooldown (default 10 seconds) prevents the feedback from becoming noise.
 
+---
+
+## Evaluation
+
+The three feedback strategies (static, contextual, personalized) are compared in field tests under real running conditions, using both objective and subjective metrics.
+
+**Objective metrics**
+
+- Percentage of training time spent in the target zone
+- Deviation from the target heart rate
+- Heart rate stability throughout the session
+
+**Subjective metrics**
+
+- Perceived exertion (Borg scale)
+- Usability
+- Perceived usefulness of the feedback
+
+---
+
+## Scientific Context
+
+This work draws on research in wearable computing, physiological computing, and adaptive feedback systems in sport. The main sources behind the design are listed below.
+
+- **Training zones.** Seiler (2010), _What is best practice for training intensity and duration distribution in endurance athletes?_, International Journal of Sports Physiology and Performance. This is the source of the five zone scale used by the static strategy.
+- **Limits of fixed thresholds.** Jamnick et al. (2020), _An examination and critique of current methods to determine exercise intensity_, Sports Medicine. Fixed percentages of max heart rate do not reliably match individual physiological thresholds, which motivates the contextual and personalized strategies.
+- **HRV based thresholds.** Rogers et al. (2021), Frontiers in Physiology, on detecting the aerobic threshold from the fractal correlation properties of HRV (DFA alpha1), which is the basis for personalizing thresholds from RR intervals.
+- **Perceived exertion.** Borg (1982), _Ratings of perceived exertion and heart rates during short term cycle exercise and their use in a new cycling strength test_, International Journal of Sports Medicine.
+
