@@ -45,3 +45,46 @@ The feedback isn't just "go faster". It takes into account where you are in your
 
 ## How It Works
 
+### 1. BLE Connection
+
+The app scans for devices advertising the standard Heart Rate Service (`0x180D`). No proprietary SDK is used. Core Bluetooth communicates directly with any compatible chest strap. When a supported device is found, the app connects automatically.
+
+Supported devices are configured in `Configuration.swift` and matched by name.
+
+```swift
+static let supportedDevices: [String] = ["Polar"]
+```
+
+### 2. Data Parsing
+
+The chest strap sends raw bytes following the [Bluetooth Heart Rate Profile](https://www.bluetooth.com/specifications/specs/heart-rate-profile-1-0/) specification.
+
+The app parses two things:
+
+- **Heart rate** in beats per minute
+- **RR intervals**, the time between individual heartbeats in milliseconds, which are the foundation for HRV analysis
+
+### 3. Training Zone Classification
+
+Before a session the user selects a training zone and enters their age. Max heart rate is estimated as 220 minus age. The app converts this into absolute BPM boundaries for the chosen zone.
+
+Zone boundaries follow the five zone scale reported by Seiler (2010) in the International Journal of Sports Physiology and Performance.
+
+| Zone | Name      | % of Max HR   |
+| ---- | --------- | ------------- |
+| 1    | Recovery  | 60 to 72%     |
+| 2    | Endurance | 72 to 82%     |
+| 3    | Aerobic   | 82 to 87%     |
+| 4    | Threshold | 87 to 92%     |
+| 5    | Maximum   | 92% and above |
+
+### 4. Adaptive Feedback
+
+Every second, the app checks whether you are in your target zone. If you have been outside it long enough, it speaks through your headphones.
+
+- **"Faster"** means your heart rate is too low for the target zone
+- **"Slower"** means your heart rate is too high
+- **Silence** means you are exactly where you should be
+
+A configurable cooldown (default 10 seconds) prevents the feedback from becoming noise.
+
