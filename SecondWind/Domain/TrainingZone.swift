@@ -15,7 +15,7 @@ struct TrainingZone: Identifiable {
     let description: String
     let minPercent: Double
     
-    // Define zones
+    // Define zones (Type property shared by all instances)
     static let zones: [TrainingZone] = [
         
         // Zone 1
@@ -59,7 +59,7 @@ struct TrainingZone: Identifiable {
         ),
     ]
     
-    // Tells where zone ends and next one starts in %
+    /// Tells where zone ends and next one starts in %
     var maxPercent: Double {
         
         // Already in last training zone
@@ -68,5 +68,50 @@ struct TrainingZone: Identifiable {
         }
         
         return TrainingZone.zones[id].minPercent
+    }
+    
+    /// Converts zone starting percentage into bpm
+    func calcMinHR(userMaxHR: Int) -> Int {
+        let val = Double(userMaxHR) * minPercent
+        return Int(val.rounded())
+    }
+    
+    /// Calculate highest heart rate that still belongs to zone
+    func calcMaxHR(userMaxHR: Int) -> Int {
+        
+        // Already in zone 5
+        if id == 5 {
+            return userMaxHR
+        }
+        
+        let nextZone = TrainingZone.zones[id]
+        
+        // -1 ensures that two consecutive heart rate zones don't overlap
+        return nextZone.calcMinHR(userMaxHR: userMaxHR) - 1
+    }
+    
+    /// Checks if heart rate is in zone
+    func containsHR(HR: Int, maxHR: Int) -> Bool {
+        let lowest = calcMinHR(userMaxHR: maxHR)
+        let highest = calcMaxHR(userMaxHR: maxHR)
+        
+        if id == 5 {
+            return HR >= lowest
+        }
+        
+        return HR >= lowest && HR <= highest
+    }
+    
+    /// Check in which zone heart rate is in
+    static func zone(HR: Int, maxHR: Int) -> TrainingZone? {
+        
+        // Iterate and check if zone contains HR
+        for zone in zones {
+            if zone.containsHR(HR: HR, maxHR: maxHR) {
+                return zone
+            }
+        }
+        
+        return nil
     }
 }
