@@ -12,7 +12,7 @@ import Foundation
 @Model
 class UserProfile {
     
-    // Attributes
+    // Attributes (var = mutable)
     var username: String
     var birthDate: Date
     var createdAt: Date
@@ -24,7 +24,10 @@ class UserProfile {
         let today: Date = Date()
         
         // Get how many full years lie between two dates
-        let yearComponents: DateComponents = Calendar.current.dateComponents([.year], from: birthDate, to: today)
+        let yearComponents: DateComponents =
+        Calendar.current.dateComponents(
+            [.year], from: birthDate, to: today
+        )
         
         // Use year variable if there is one, otherwise 0
         let years: Int = yearComponents.year ?? 0
