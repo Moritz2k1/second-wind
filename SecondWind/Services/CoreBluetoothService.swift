@@ -28,4 +28,36 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
     @Published private(set) var statusText: String = "Ready"
     @Published private(set) var isConnected: Bool = false
     @Published private(set) var isScanning: Bool = false
+    
+    // Publisher Conformance -> Must be used because of protocol ($ accesses publisher)
+    var heartRatePublisher: AnyPublisher<Int, Never> {
+        $heartRate.eraseToAnyPublisher()
+    }
+    
+    var rrIntervalsPublisher: AnyPublisher<[Double], Never> {
+        $rrIntervals.eraseToAnyPublisher()
+    }
+    
+    var isConnectedPublisher: AnyPublisher<Bool, Never> {
+        $isConnected.eraseToAnyPublisher()
+    }
+    
+    func startScanning() {
+        guard centralManager.state == .poweredOn
+                else {
+            statusText = "Bluetooth not powered on"
+            return
+        }
+        
+        isScanning = true
+        statusText = "Searching for device..."
+        
+        // Only look for devices with HR services
+        centralManager.scanForPeripherals(withServices: [HEART_RATE_SERVICE])
+    }
+    
+    func stopScanning() {
+        centralManager.stopScan()
+        isScanning = false
+    }
 }
