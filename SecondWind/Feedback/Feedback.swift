@@ -19,7 +19,7 @@ class Feedback: ObservableObject {
     private var lastFeedback: Date = .distantPast
     
     /// Compares current heart rate against zone boundaries and triggers audio feedback
-    func evaluate(currentHR: Int, zone: TrainingZone, userMaxHR: Int) {
+    func evaluate(currentHR: Int, zone: TrainingZone, userMaxHR: Int) -> Void {
         
         // Compute absolute BPM boundaries for selected zone
         let zoneMin = zone.calcMinHR(userMaxHR: userMaxHR)
@@ -31,5 +31,22 @@ class Feedback: ObservableObject {
         // Enforce cooldown to avoid repeated feedback
         guard Date().timeIntervalSince(lastFeedback) >= Configuration.feedbackInterval else { return }
         
+        // Trigger audio feedback if not in selected zone
+        if currentHR < zoneMin {
+            speak(message: "Faster")
+        }
+        else if currentHR > zoneMax {
+            speak(message: "Slower")
+        }
+    }
+    
+    // Speaks given message and updates cooldown timer
+    private func speak(message: String) -> Void {
+        let speech = AVSpeechUtterance(string: message)
+        speech.voice = AVSpeechSynthesisVoice(language: "en-US")
+        speech.rate = 0.45
+        speech.volume = 1.0
+        synthesizer.speak(speech)
+        lastFeedback = Date()
     }
 }
