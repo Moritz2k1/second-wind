@@ -178,7 +178,7 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
 
 extension CoreBluetoothService: CBCentralManagerDelegate {
     
-    // Called when Bluetooth status changes
+    /// Called when Bluetooth status changes
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
@@ -192,8 +192,8 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         }
     }
     
-    // Called when device has been found
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+    /// Called when device has been found
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral) {
         
         // Guard constant for peripheral name
         guard let peripheralName = peripheral.name else { return }
@@ -212,5 +212,25 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         
         // Direct connection
         centralManager.connect(peripheral)
+    }
+    
+    /// Connection successful
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        
+        statusText = "Connected"
+        isConnected = true
+        // peripheral.delegate = self
+        
+        // Search for HR Services
+        peripheral.discoverServices([HEART_RATE_SERVICE])
+    }
+    
+    /// Disconnect (reset values)
+    func centralManager(_ central: CBCentralManager) {
+        
+        statusText = "Disconnected"
+        isConnected = false
+        heartRate = 0
+        rrIntervals = []
     }
 }
