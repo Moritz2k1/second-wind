@@ -266,4 +266,17 @@ extension CoreBluetoothService: CBPeripheralDelegate {
             }
         }
     }
+    
+    /// Received new data
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic) {
+        
+        // Check if this is heart rate characteristic
+        if characteristic.uuid != BT_CHARACTERISTIC { return }
+        
+        // Get received data
+        guard let newData = characteristic.value else { return }
+        
+        // Process heart rate data
+        parseHRData(data: newData)
+    }
 }
