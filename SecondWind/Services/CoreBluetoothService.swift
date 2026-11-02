@@ -77,30 +77,48 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
          0 = 8-bit value
          1 = 16-bit value
          Bitwise AND (&) checks whether bit is 0 set
+         
+         Check if heart rate is stored as 8-bit or 16-bit
          */
-        
-        // Check if heart rate is stored as 8-bit or 16-bit
         let is16Bit = (flags & 0x01) != 0
         
+        // Variable for extracted hr - value depends on whether sensor uses 8 or 16 bits
         let hrVal: Int
         
         if is16Bit {
             
-            // Combine two bytes into one integer
+            /*
+             hr is stored in two bytes
+             data[1] = lower 8 bits
+             data[2] = higher 8 bits
+             
+             Shift higher byte 8 positions to the left and
+             combine both bytes using bitwise OR (|)
+             */
             hrVal = Int(data[1]) | (Int(data[2]) << 8)
         }
         else {
+            // If sensor uses 8-bit format, hr is stored entirely in second byte
             hrVal = Int(data[1])
         }
         
+        // Update current hr -> published to subscribers
         heartRate = hrVal
         
-        // Check if RR-intervals are included
+        // Bit 4 determines whether RR-interval data is included
         let hasRRIntervals = (flags & 0x10) != 0
         
+        // If no RR-Intervals are available, return (nothing to extract)
         if !hasRRIntervals { return }
         
-        // Determine where RR-Intervals start
+        /*
+         Determine starting position of RR-Interval data
+         First byte contains flags
+         hr occupies either:
+            - 1 byte (8-bit format)
+            - 2 byte (16-bit format)
+         -> RR-Intervals start at index 2 or 3
+         */
         let rrOffset: Int
         
         if is16Bit {
@@ -110,24 +128,50 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
             rrOffset = 2
         }
         
+        /*
+         Store extracted RR-Intervals
+         Each interval represents time between two heartbeats
+         */
         var intervals: [Double] = []
+        
+        // Start reading Bluetooth packet at RR-interval offset
         var index = rrOffset
         
-        // Read RR-Intervals (2 bytes per interval)
+        /*
+         Each RR-Interval consists of exactly 2 bytes
+         Check that at least 2 bytes remain before reading them
+         -> prevents accessing index outside data array
+         */
         while index + 1 < data.count {
             
+            /*
+             Combine two consecutive bytes into one 16-bit value
+             data[index] = lower 8 bits
+             data[index + 1] = higher 8 bits
+             
+             Shift higher byte 8 positions to the left and
+             combine both bytes using bitwise OR
+             */
             let rawVal = Int(data[index]) | (Int(data[index + 1]) << 8)
             
-            // Convert from 1/1024 seconds to milliseconds
+            /*
+             Bluetooth stores RR-Intervals in units of 1/1024 seconds
+             Divide by 1024 to convert into seconds
+             Multiply by 1000 to convert seconds into milliseconds
+             */
             let intervalMS = Double(rawVal) / 1024.0 * 1000.0
             
+            // Add converted interval to array
             intervals.append(intervalMS)
             
+            // Move forward by 2 bytes to read next RR-Interval
             index += 2
         }
         
+        // Update RR-Interval property
         rrIntervals = intervals
         
+        // map { Int($0) } converts the Double values into integers
         print("HR: \(hrVal) bpm | RR: \(intervals.map { Int($0) }) ms")
     }
 }
