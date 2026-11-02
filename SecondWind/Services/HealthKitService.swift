@@ -13,6 +13,7 @@ class HealthKitService {
     
     private let healthStore: HKHealthStore = HKHealthStore()
     
+    /// Async function for fetching date of birth
     func fetchDateOfBirth() async -> Date? {
         
         // Check if Apple Health exists on device
