@@ -219,7 +219,7 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         
         statusText = "Connected"
         isConnected = true
-        // peripheral.delegate = self
+        peripheral.delegate = self
         
         // Search for HR Services
         peripheral.discoverServices([HEART_RATE_SERVICE])
@@ -232,5 +232,38 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         isConnected = false
         heartRate = 0
         rrIntervals = []
+    }
+}
+
+extension CoreBluetoothService: CBPeripheralDelegate {
+    
+    /// Discover heart rate service
+    func peripheral(_ peripheral: CBPeripheral) {
+        
+        // All services
+        guard let services = peripheral.services else { return }
+        
+        // Iterate over services
+        for service in services {
+            if service.uuid == HEART_RATE_SERVICE {
+                peripheral.discoverCharacteristics([BT_CHARACTERISTIC], for: service)
+            }
+        }
+    }
+    
+    /// Discover characteristics and activate notifications
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService) {
+        
+        // All characteristics
+        guard let characteristics = service.characteristics else { return }
+        
+        // Iterate over characteristics
+        for characteristic in characteristics {
+            if characteristic.uuid == BT_CHARACTERISTIC {
+                // Activate notifications
+                peripheral.setNotifyValue(true, for: characteristic)
+                statusText = "Heart Rate Stream active"
+            }
+        }
     }
 }
