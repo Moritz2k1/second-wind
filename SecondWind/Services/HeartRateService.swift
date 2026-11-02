@@ -5,6 +5,8 @@
 //  Created by Moritz Gutschi on 02.11.26.
 //
 
+import Combine
+
 // Defines blueprint for HeartRateService
 protocol HeartRateService: AnyObject {
     
@@ -15,4 +17,12 @@ protocol HeartRateService: AnyObject {
     var isConnected: Bool { get }
     var statusText: String { get }
     var isScanning: Bool { get }
+    
+    // Publishers allow other parts of the app to observe changes
+    var heartRatePublisher: AnyPublisher<Int, Never> { get }
+    var rrIntervalsPublisher: AnyPublisher<[Double], Never> { get }
+    var isConnectedPublisher: AnyPublisher<Bool, Never> { get }
+    
+    func startScanning()
+    func stopScanning()
 }
