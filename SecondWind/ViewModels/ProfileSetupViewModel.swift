@@ -11,17 +11,32 @@ import Observation
 @Observable
 class ProfileSetupViewModel {
     
-    // Properties
-    var username: String = ""
-    var birthDate: Date = Date()
-    var importedFromHealth: Bool = false
-    
     // Health Kit Service
     private let healthKitService: HealthKitService = HealthKitService()
+    
+    // Properties
+    var username: String = ""
+    
+    // Defaults to 30 years of age
+    var birthDate: Date = Calendar.current.date(
+        byAdding: .year,
+        value: -30,
+        to: Date()
+    ) ?? Date()
+    
+    var importedFromHealth: Bool = false
     
     // Check if username is valid (should not contain whitespaces)
     var isValid: Bool {
         !trimName(username).isEmpty
+    }
+    
+    var birthDateInfo: String {
+        if importedFromHealth {
+            return "Imported from Apple Health. You may change it if it's incorrect."
+        } else {
+            return "Used to estimate your maximum heart rate."
+        }
     }
     
     /// Fetch birth date from health app
@@ -33,7 +48,7 @@ class ProfileSetupViewModel {
     }
     
     /// Function for creating a profile
-    func makeProfile() -> UserProfile {
+    func createProfile() -> UserProfile {
         return UserProfile(
             username: trimName(username),
             birthDate: birthDate,
