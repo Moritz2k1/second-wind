@@ -175,3 +175,42 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
         print("HR: \(hrVal) bpm | RR: \(intervals.map { Int($0) }) ms")
     }
 }
+
+extension CoreBluetoothService: CBCentralManagerDelegate {
+    
+    // Called when Bluetooth status changes
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        switch central.state {
+        case .poweredOn:
+            statusText = "Bluetooth ready"
+        case .poweredOff:
+            statusText = "Bluetooth powered off"
+        case .unauthorized:
+            statusText = "Bluetooth not authorized"
+        default:
+            statusText = "Bluetooth not available"
+        }
+    }
+    
+    // Called when device has been found
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        
+        // Guard constant for peripheral name
+        guard let peripheralName = peripheral.name else { return }
+        
+        // Check if device name matches one of supported devices
+        let isSupportedDevice = Configuration.supportedDevices.contains {
+            device in peripheralName.contains(device)
+        }
+        
+        // Ignore devices that are not supported
+        guard isSupportedDevice else { return }
+        
+        self.peripheral = peripheral
+        statusText = "Device found: \(peripheralName)"
+        stopScanning()
+        
+        // Direct connection
+        centralManager.connect(peripheral)
+    }
+}
