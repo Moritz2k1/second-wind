@@ -10,9 +10,6 @@ import SwiftData
 
 struct ProfileSetupView: View {
     
-    // Needed to save profile into database
-    @Environment(\.modelContext) private var modelContext
-    
     // ViewModel holds all values and logic
     @State private var viewModel: ProfileSetupViewModel = ProfileSetupViewModel()
     
@@ -54,6 +51,10 @@ struct ProfileSetupView: View {
     /// Saves profile, afterwards app shows main screen
     private func saveProfile() {
         let profile: UserProfile = viewModel.createProfile()
-        modelContext.insert(profile)
+        profile.saveProfile()
     }
+}
+
+#Preview {
+    ProfileSetupView()
 }
