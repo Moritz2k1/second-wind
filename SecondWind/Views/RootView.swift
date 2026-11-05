@@ -11,7 +11,19 @@ import SwiftUI
 struct RootView: View {
     
     // Remembered on the device
-    @AppStorage("seenOnboarding") private var seenOnboarding: Bool = false
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
+    @AppStorage("hasCompletedProfile") private var hasCompletedProfile: Bool = false
     
-    var body: some View {}
+    var body: some View {
+        if !hasSeenOnboarding {
+            //
+        } else if !hasCompletedProfile {
+            ProfileSetupView()
+        } else {
+            HomeView()
+        }
+    }
+    
+#Preview {
+    RootView()
 }
