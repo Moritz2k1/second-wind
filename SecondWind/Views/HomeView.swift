@@ -8,13 +8,25 @@
 import SwiftUI
 import SwiftData
 
+// Placeholder for main screen
 struct HomeView: View {
     
-    @Query private var profile: [UserProfile]
+    // Loaded once
+    private let profile: UserProfile? = UserProfile.loadProfile()
     
     var body: some View {
-        if let profile: UserProfile = profile.first {
-            Text("Welcome, \(profile.username)")
+        if let profile: UserProfile = profile {
+            VStack(spacing: 12) {
+                Text("Welcome, \(profile.username)")
+                    .font(.title)
+                
+                Text("Estimated max heart rate: \(profile.maxHeartRate) bpm")
+                    .foregroundStyle(.secondary)
+            }
         }
     }
+}
+
+#Preview {
+    HomeView()
 }

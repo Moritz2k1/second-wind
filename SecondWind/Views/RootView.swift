@@ -23,7 +23,8 @@ struct RootView: View {
             HomeView()
         }
     }
-    
+}
+
 #Preview {
     RootView()
 }
