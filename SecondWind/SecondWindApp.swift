@@ -10,23 +10,23 @@ import SwiftData
 
 @main
 struct SecondWindApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+    
+    // Constants for local database
+    let container: ModelContainer
+    
+    init() {
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            // Set up local database
+            container = try ModelContainer()
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            fatalError("Failed to create database: \(error)")
         }
-    }()
+    }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modelContainer(container)
         }
-        .modelContainer(sharedModelContainer)
     }
 }
