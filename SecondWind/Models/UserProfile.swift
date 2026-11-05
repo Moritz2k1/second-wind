@@ -5,17 +5,13 @@
 //  Created by Moritz Gutschi on 31.10.26.
 //
 
-import SwiftData
 import Foundation
 
-// SwiftData model -> stored locally in app's db
-@Model
-class UserProfile {
+struct UserProfile {
     
     // Attributes (var = mutable)
     var username: String
     var birthDate: Date
-    var createdAt: Date
     
     // Used for getting age of user
     var age: Int {
@@ -45,9 +41,23 @@ class UserProfile {
          Int((208 - 0.7 * Double(age)).rounded())
      }
     
-    init(username: String, birthDate: Date) {
-        self.username = username
-        self.birthDate = birthDate
-        self.createdAt = Date()
+    /// Writes profile to device
+    func saveProfile() {
+        let defaults: UserDefaults = UserDefaults.standard
+        defaults.set(username, forKey: "username")
+        defaults.set(birthDate.timeIntervalSince1970, forKey: "birthDate")
+        defaults.set(true, forKey: "hasCompletedProfile")
+    }
+    
+    /// Reads profile from device, nil if none was saved yet
+    static func loadProfile() -> UserProfile? {
+        let defaults: UserDefaults = UserDefaults.standard
+        
+        guard let username: String = defaults.string(forKey: "username") else { return nil }
+        
+        let timestamp: Double = defaults.double(forKey: "birthDate")
+        let birthDate: Date = Date(timeIntervalSince1970: timestamp)
+        
+        return UserProfile(username: username, birthDate: birthDate)
     }
 }
