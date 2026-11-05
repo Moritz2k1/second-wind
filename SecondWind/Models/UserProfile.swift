@@ -45,9 +45,9 @@ class UserProfile {
          Int((208 - 0.7 * Double(age)).rounded())
      }
     
-    init(username: String, birthDate: Date, createdAt: Date) {
+    init(username: String, birthDate: Date) {
         self.username = username
         self.birthDate = birthDate
-        self.createdAt = createdAt
+        self.createdAt = Date()
     }
 }
