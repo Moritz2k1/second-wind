@@ -52,7 +52,6 @@ class ProfileSetupViewModel {
         return UserProfile(
             username: trimName(username),
             birthDate: birthDate,
-            createdAt: Date.now
         )
     }
     

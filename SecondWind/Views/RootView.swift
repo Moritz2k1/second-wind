@@ -16,7 +16,7 @@ struct RootView: View {
     
     var body: some View {
         if !hasSeenOnboarding {
-            //
+            OnboardingView()
         } else if !hasCompletedProfile {
             ProfileSetupView()
         } else {
