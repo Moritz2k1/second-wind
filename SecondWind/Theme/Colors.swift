@@ -43,4 +43,22 @@ extension Color {
     // Text Colors
     static let primaryText: Color = Color.white
     static let secondaryText: Color = Color.white.opacity(0.65)
+    
+    // Zone colors
+    static let zone1: Color = Color(hex: 0x0081cf)
+    static let zone2: Color = Color(hex: 0x00c9a7)
+    static let zone3: Color = Color(hex: 0xffc75f)
+    static let zone4: Color = Color(hex: 0xff9671)
+    static let zone5: Color = Color(hex: 0xff6f91)
+    
+    /// Returns color for zone id
+    static func zoneColor(zoneId: Int) -> Color {
+        switch zoneId {
+        case 1: return zone1
+        case 2: return zone2
+        case 3: return zone3
+        case 4: return zone4
+        default: return zone5
+        }
+    }
 }
