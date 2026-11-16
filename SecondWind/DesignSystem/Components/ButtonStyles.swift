@@ -41,3 +41,13 @@ struct SecondaryButtonStyle: ButtonStyle {
             .opacity(configuration.isPressed ? 0.6 : 1.0)
     }
 }
+
+// Can be referenced with .primary
+extension ButtonStyle where Self == PrimaryButtonStyle {
+    static var primary: PrimaryButtonStyle { PrimaryButtonStyle() }
+}
+
+// Can be referenced with .secondary
+extension ButtonStyle where Self == SecondaryButtonStyle {
+    static var secondary: SecondaryButtonStyle { SecondaryButtonStyle() }
+}
