@@ -9,11 +9,11 @@ import SwiftUI
 
 /*
  Deep Blue Sea Color Palette
- Background: 0b132b
- Surface / Cards: 1c2541
- Secondary Surface / Cards: 3a506b
- Secondary accent: 5bc0be
- Accent: 6fffe9
+ Background: 0b132b - Very dark navy
+ Cards: 1c2541 - Dark navy
+ Secondary Cards: 3a506b - Navy
+ Secondary accent: 5bc0be - Teal
+ Accent: 6fffe9 - Cyan
  */
 extension Color {
     
@@ -25,20 +25,14 @@ extension Color {
         self.init(red: red, green: green, blue: blue)
     }
     
-    // Very dark navy
-    static let background: Color = Color(hex: 0x0b132b)
-    
-    // Dark navy
-    static let surface: Color = Color(hex: 0x1c2541)
-    
-    // Navy
-    static let secondarySurface: Color = Color(hex: 0x3a506b)
-    
-    // Teal
+    // Brand
+    static let accent: Color = Color(hex: 0x6fffe9)
     static let secondaryAccent: Color = Color(hex: 0x5bc0be)
     
-    // Cyan
-    static let accent: Color = Color(hex: 0x6fffe9)
+    // Backgrounds
+    static let background: Color = Color(hex: 0x0b132b)
+    static let card: Color = Color(hex: 0x1c2541)
+    static let cardSecondary: Color = Color(hex: 0x3a506b)
     
     // Text Colors
     static let primaryText: Color = Color.white

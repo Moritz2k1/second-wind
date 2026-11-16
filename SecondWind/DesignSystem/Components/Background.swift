@@ -12,7 +12,7 @@ struct AppBackground: View {
     
     var body: some View {
         RadialGradient(
-            colors: [Color.surface, Color.background],
+            colors: [Color.secondaryAccent, Color.background],
             center: .center,
             startRadius: 0,
             endRadius: 500)
