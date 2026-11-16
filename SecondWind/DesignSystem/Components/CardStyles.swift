@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Puts content on rounded card
-struct Card: ViewModifier {
+struct CardStyle: ViewModifier {
     
     func body(content: Content) -> some View {
         content
@@ -24,7 +24,7 @@ struct Card: ViewModifier {
 }
 
 extension View {
-    func card() -> some View {
-        modifier(Card())
+    func cardStyle() -> some View {
+        modifier(CardStyle())
     }
 }
