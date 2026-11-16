@@ -24,3 +24,20 @@ struct PrimaryButtonStyle: ButtonStyle {
             .opacity(configuration.isPressed ? 0.8 : 1.0)
     }
 }
+
+/// Secondary Button - cyan outline
+struct SecondaryButtonStyle: ButtonStyle {
+    
+    func makeBody(configuration: ButtonStyle.Configuration) -> some View {
+        configuration.label
+            .font(.headline)
+            .foregroundStyle(Color.accent)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, Spacing.medium)
+            .overlay(
+                RoundedRectangle(cornerRadius: Radius.button)
+                    .stroke(Color.accent, lineWidth: 1.5)
+            )
+            .opacity(configuration.isPressed ? 0.6 : 1.0)
+    }
+}
