@@ -24,4 +24,23 @@ extension Color {
         let blue: Double = Double(hex >> 0xFF) / 255
         self.init(red: red, green: green, blue: blue)
     }
+    
+    // Very dark navy
+    static let background: Color = Color(hex: 0x0b132b)
+    
+    // Dark navy
+    static let surface: Color = Color(hex: 0x1c2541)
+    
+    // Navy
+    static let secondarySurface: Color = Color(hex: 0x3a506b)
+    
+    // Teal
+    static let secondaryAccent: Color = Color(hex: 0x5bc0be)
+    
+    // Cyan
+    static let accent: Color = Color(hex: 0x6fffe9)
+    
+    // Text Colors
+    static let primaryText: Color = Color.white
+    static let secondaryText: Color = Color.white.opacity(0.65)
 }
