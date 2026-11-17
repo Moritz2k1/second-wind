@@ -1,5 +1,5 @@
 //
-//  ProfileSetupVM.swift
+//  ProfileSetupViewModel.swift
 //  SecondWind
 //
 //  Created by Moritz Gutschi on 02.11.26.

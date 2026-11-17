@@ -1,5 +1,5 @@
 //
-//  AppBackground.swift
+//  ScreenBackground.swift
 //  SecondWind
 //
 //  Created by Moritz Gutschi on 16.11.26.

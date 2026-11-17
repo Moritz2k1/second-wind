@@ -1,5 +1,5 @@
 //
-//  User.swift
+//  UserProfile.swift
 //  SecondWind
 //
 //  Created by Moritz Gutschi on 31.10.26.

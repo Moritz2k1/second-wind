@@ -1,5 +1,5 @@
 //
-//  Zone.swift
+//  ZoneBadge.swift
 //  SecondWind
 //
 //  Created by Moritz Gutschi on 17.11.26.

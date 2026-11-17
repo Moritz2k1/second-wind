@@ -17,7 +17,7 @@ struct Metric: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             Text(title)
-                .font(.caption)
+                .font(._caption)
                 .foregroundStyle(Color.secondaryText)
             
             HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
@@ -26,7 +26,7 @@ struct Metric: View {
                     .foregroundStyle(Color.primaryText)
                 
                 Text(unit)
-                    .font(.body)
+                    .font(._body)
                     .foregroundStyle(Color.secondaryText)
             }
         }

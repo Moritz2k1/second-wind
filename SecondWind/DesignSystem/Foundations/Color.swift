@@ -1,5 +1,5 @@
 //
-//  Colors.swift
+//  Color.swift
 //  SecondWind
 //
 //  Created by Moritz Gutschi on 16.11.26.
@@ -21,7 +21,7 @@ extension Color {
     init (hex: UInt32) {
         let red: Double = Double((hex >> 16) & 0xFF) / 255
         let green: Double = Double((hex >> 8) & 0xFF) / 255
-        let blue: Double = Double(hex >> 0xFF) / 255
+        let blue: Double = Double(hex & 0xFF) / 255
         self.init(red: red, green: green, blue: blue)
     }
     
