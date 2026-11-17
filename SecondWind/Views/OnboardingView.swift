@@ -22,12 +22,12 @@ struct OnboardingView: View {
                 .foregroundStyle(.red)
             
             Text("Chest strap required")
-                .font(._largeTitle)
+                .font(.screenTitle)
                 .bold()
                 .multilineTextAlignment(.center)
             
             Text("This app needs a Polar H10 to work properly.")
-                .font(._body)
+                .font(.body)
                 .multilineTextAlignment(.center)
             
             Text("The iPhone alone can't measure the time between heartbeats accurately enough.")

@@ -8,11 +8,11 @@
 import SwiftUI
 
 /// Used as background of every screen
-struct AppBackground: View {
+struct ScreenBackground: View {
     
     var body: some View {
         RadialGradient(
-            colors: [Color.secondaryAccent, Color.background],
+            colors: [Color.secondaryAccent, Color.bg],
             center: .center,
             startRadius: 0,
             endRadius: 500)

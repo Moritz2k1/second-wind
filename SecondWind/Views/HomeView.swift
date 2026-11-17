@@ -18,7 +18,7 @@ struct HomeView: View {
         if let profile: UserProfile = profile {
             VStack(spacing: 12) {
                 Text("Welcome, \(profile.username)")
-                    .font(._title)
+                    .font(.sectionTitle)
                 
                 Text("Estimated max heart rate: \(profile.maxHeartRate) bpm")
                     .foregroundStyle(.secondary)

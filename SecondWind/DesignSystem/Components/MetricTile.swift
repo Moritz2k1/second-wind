@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Card with label and big number
-struct Metric: View {
+struct MetricTile: View {
     
     let title: String
     let value: String
@@ -17,7 +17,7 @@ struct Metric: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             Text(title)
-                .font(._caption)
+                .font(.caption)
                 .foregroundStyle(Color.secondaryText)
             
             HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
@@ -26,7 +26,7 @@ struct Metric: View {
                     .foregroundStyle(Color.primaryText)
                 
                 Text(unit)
-                    .font(._body)
+                    .font(.body)
                     .foregroundStyle(Color.secondaryText)
             }
         }

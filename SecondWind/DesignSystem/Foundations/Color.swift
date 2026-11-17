@@ -30,7 +30,7 @@ extension Color {
     static let secondaryAccent: Color = Color(hex: 0x5bc0be)
     
     // Backgrounds
-    static let background: Color = Color(hex: 0x0b132b)
+    static let bg: Color = Color(hex: 0x0b132b)
     static let card: Color = Color(hex: 0x1c2541)
     static let cardSecondary: Color = Color(hex: 0x3a506b)
     
@@ -52,7 +52,8 @@ extension Color {
         case 2: return zone2
         case 3: return zone3
         case 4: return zone4
-        default: return zone5
+        case 5: return zone5
+        default: return Color.indigo
         }
     }
 }

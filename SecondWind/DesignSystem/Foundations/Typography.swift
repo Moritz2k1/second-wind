@@ -10,16 +10,10 @@ import SwiftUI
 extension Font {
     
     /// Screen titles
-    static let _largeTitle: Font = Font.largeTitle.bold()
+    static let screenTitle: Font = Font.largeTitle.bold()
     
     /// Section titles
-    static let _title: Font = Font.title2.bold()
-    
-    /// Normal text
-    static let _body: Font = Font.body
-    
-    /// Helper texts
-    static let _caption: Font = Font.caption
+    static let sectionTitle: Font = Font.title2.bold()
     
     /// Big numbers on training screen
     static let metric: Font = Font

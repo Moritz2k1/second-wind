@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Pill showing training zone
-struct Zone: View {
+struct ZoneBadge: View {
     
     let zone: TrainingZone
     
@@ -16,7 +16,7 @@ struct Zone: View {
         let color: Color = Color.zoneColor(zoneId: zone.id)
         
         HStack(spacing: Spacing.small) {
-            Text("Zone \(zone.id)")
+            Text(zone.name)
                 .bold()
             Text(zone.title)
         }
