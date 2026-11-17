@@ -39,6 +39,11 @@ class ProfileSetupViewModel {
         }
     }
     
+    // Used for live preview on profile setup screen
+    var estimatedMaxHeartRate: Int {
+        createProfile().maxHeartRate
+    }
+    
     /// Fetch birth date from health app
     func loadDateOfBirthFromHealth() async {
         guard let date = await healthKitService.fetchDateOfBirth() else { return }
