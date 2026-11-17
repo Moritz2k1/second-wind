@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct ProfileSetupView: View {
     
@@ -14,44 +13,24 @@ struct ProfileSetupView: View {
     @State private var viewModel: ProfileSetupViewModel = ProfileSetupViewModel()
     
     var body: some View {
-        NavigationStack {
-            Form {
-                
-                // Username section
-                Section("Username") {
-                    TextField(
-                        "Your name",
-                        text: $viewModel.username).textInputAutocapitalization(.words).autocorrectionDisabled()
-                }
-                .listRowBackground(Color.card)
-                
-                // Date of birth
-                Section {
-                    DatePicker(
-                        "Date of birth",
-                        selection: $viewModel.birthDate,
-                        in: ...Date(),
-                        displayedComponents: .date
-                    )
-                } footer: {
-                    Text(viewModel.birthDateInfo)
-                }
-                .listRowBackground(Color.card)
-                
-                // Confirm
-                Section {
-                    Button("Confirm") {
-                        saveProfile()
-                    }.disabled(!viewModel.isValid)
-                }
-                .listRowBackground(Color.card)
+        ScrollView {
+            VStack(spacing: Spacing.large) {
+                header
+                nameSection
+                birthDateSection
+                maxHeartRateTile
             }
-            .scrollContentBackground(.hidden)
-            .screenBackground()
-            .navigationTitle("Your Profile")
-            .task {
-                await viewModel.loadDateOfBirthFromHealth()
-            }
+            .padding(.horizontal, Spacing.large)
+            .padding(.top, Spacing.extraLarge)
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .scrollDismissesKeyboard(.interactively)
+        .safeAreaInset(edge: .bottom) {
+            confirmButton
+        }
+        .screenBackground()
+        .task {
+            await viewModel.loadDateOfBirthFromHealth()
         }
     }
     
