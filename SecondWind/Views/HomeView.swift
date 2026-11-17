@@ -22,7 +22,7 @@ struct HomeView: View {
                         .font(.sectionTitle)
                     
                     Text("Estimated max heart rate: \(profile.maxHeartRate) bpm")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.secondaryText)
                 }
             }
         }

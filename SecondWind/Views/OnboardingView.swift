@@ -14,45 +14,130 @@ struct OnboardingView: View {
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
     
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
+        ScrollView {
+            VStack(spacing: Spacing.extraLarge) {
+                hero
+                header
+                infoCard
+            }
+            .padding(.horizontal, Spacing.large)
+            .padding(.top, Spacing.extraLarge)
+            .padding(.bottom, Spacing.large)
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .safeAreaInset(edge: .bottom) {
+            startButton
+        }
+        .screenBackground()
+    }
+    
+    private var hero: some View {
+        ZStack {
+            Circle()
+                .fill(Color.accent.opacity(0.06))
+                .frame(width: 200, height: 200)
             
-            Image(systemName: "heart.circle.fill")
-                .font(.system(size: 80))
-                .foregroundStyle(.red)
+            Circle()
+                .fill(Color.accent.opacity(0.12))
+                .frame(width: 150, height: 150)
             
+            Circle()
+                .stroke(Color.accent.opacity(0.35), lineWidth: 1)
+                .frame(width: 150, height: 150)
+            
+            heart
+        }
+    }
+    
+    private var heart: some View {
+        Image(systemName: "heart.fill")
+            .font(.system(size: 64, weight: .semibold))
+            .foregroundStyle(Color.accent)
+            .symbolEffect(.pulse, options: .repeating)
+            .shadow(color: Color.accent.opacity(0.6), radius: 20)
+    }
+    
+    private var header: some View {
+        VStack(spacing: Spacing.small) {
             Text("Chest strap required")
                 .font(.screenTitle)
-                .bold()
-                .multilineTextAlignment(.center)
+                .foregroundStyle(Color.primaryText)
             
-            Text("This app needs a Polar H10 to work properly.")
+            Text("Second Wind needs a Polar H10 to precisely measure your heart")
                 .font(.body)
-                .multilineTextAlignment(.center)
-            
-            Text("The iPhone alone can't measure the time between heartbeats accurately enough.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-            
-            VStack(alignment: .leading, spacing: 12) {
-                Label("Polar H10", systemImage: "checkmark.circle.fill")
-            }
-            .font(.headline)
-            
-            Spacer()
-            
-            Button {
-                hasSeenOnboarding = true
-            } label: {
-                Text("Got it")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
+                .foregroundStyle(Color.secondaryText)
         }
-        .padding(24)
-        .screenBackground()
+        .multilineTextAlignment(.center)
+    }
+    
+    private var infoCard: some View {
+        VStack(alignment: .leading, spacing: Spacing.large) {
+            OnboardingInfoRow(
+                systemImage: "waveform.path.ecg",
+                title: "Beat-to-beat accuracy",
+                description: "The iPhone alone cannot measure the time between heartbeats accurately enough"
+            )
+            
+            
+            OnboardingInfoRow(
+                systemImage: "antenna.radiowaves.left.and.right",
+                title: "Connects via Bluetooth",
+                description: "Put on your strap and the app pairs with it automatically"
+            )
+            
+            
+            OnboardingInfoRow(
+                systemImage: "checkmark.seal.fill",
+                title: "Supported device",
+                description: "Polar H10"
+            )
+        }
+        .cardStyle()
+    }
+    
+    private var startButton: some View {
+        Button("Get started") {
+            hasSeenOnboarding = true
+        }
+        .buttonStyle(.primary)
+        .padding(.all, Spacing.large)
+    }
+}
+
+/// Row with icon, title, description
+private struct OnboardingInfoRow: View {
+    
+    let systemImage: String
+    let title: String
+    let description: String
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: Spacing.medium) {
+            icon
+            text
+        }
+    }
+    
+    private var icon: some View {
+        Image(systemName: systemImage)
+            .font(.title3)
+            .foregroundStyle(Color.accent)
+            .frame(width: 44, height: 44)
+            .background(Color.cardSecondary.opacity(0.6))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.button))
+    }
+    
+    private var text: some View {
+        VStack(alignment: .leading, spacing: Spacing.small / 2) {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(Color.primaryText)
+            
+            Text(description)
+                .font(.subheadline)
+                .foregroundStyle(Color.secondaryText)
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }
 

@@ -23,6 +23,7 @@ struct ProfileSetupView: View {
                         "Your name",
                         text: $viewModel.username).textInputAutocapitalization(.words).autocorrectionDisabled()
                 }
+                .listRowBackground(Color.card)
                 
                 // Date of birth
                 Section {
@@ -35,6 +36,7 @@ struct ProfileSetupView: View {
                 } footer: {
                     Text(viewModel.birthDateInfo)
                 }
+                .listRowBackground(Color.card)
                 
                 // Confirm
                 Section {
@@ -42,6 +44,7 @@ struct ProfileSetupView: View {
                         saveProfile()
                     }.disabled(!viewModel.isValid)
                 }
+                .listRowBackground(Color.card)
             }
             .scrollContentBackground(.hidden)
             .screenBackground()

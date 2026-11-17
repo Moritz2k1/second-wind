@@ -14,6 +14,7 @@ struct SecondWindApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .tint(Color.accent)
         }
     }
 }

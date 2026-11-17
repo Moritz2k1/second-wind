@@ -31,6 +31,7 @@ extension View {
         self
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background { ScreenBackground() }
+            .preferredColorScheme(.dark)
     }
 }
 
