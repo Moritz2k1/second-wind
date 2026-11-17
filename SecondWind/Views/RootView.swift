@@ -24,8 +24,6 @@ struct RootView: View {
                 HomeView()
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background { ScreenBackground() }
     }
 }
 

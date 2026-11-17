@@ -52,6 +52,7 @@ struct OnboardingView: View {
             .controlSize(.large)
         }
         .padding(24)
+        .screenBackground()
     }
 }
 

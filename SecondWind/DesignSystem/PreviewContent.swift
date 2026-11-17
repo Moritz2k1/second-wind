@@ -57,6 +57,6 @@ private struct PreviewContent: View {
 
 #Preview {
     PreviewContent()
-        .background { ScreenBackground() }
+        .screenBackground()
         .preferredColorScheme(.dark)
 }

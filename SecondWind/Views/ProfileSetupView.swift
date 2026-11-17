@@ -42,7 +42,11 @@ struct ProfileSetupView: View {
                         saveProfile()
                     }.disabled(!viewModel.isValid)
                 }
-            }.navigationTitle("Your Profile").task {
+            }
+            .scrollContentBackground(.hidden)
+            .screenBackground()
+            .navigationTitle("Your Profile")
+            .task {
                 await viewModel.loadDateOfBirthFromHealth()
             }
         }

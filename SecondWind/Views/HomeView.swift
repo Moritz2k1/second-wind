@@ -15,15 +15,18 @@ struct HomeView: View {
     private let profile: UserProfile? = UserProfile.loadProfile()
     
     var body: some View {
-        if let profile: UserProfile = profile {
-            VStack(spacing: 12) {
-                Text("Welcome, \(profile.username)")
-                    .font(.sectionTitle)
-                
-                Text("Estimated max heart rate: \(profile.maxHeartRate) bpm")
-                    .foregroundStyle(.secondary)
+        Group {
+            if let profile: UserProfile = profile {
+                VStack(spacing: 12) {
+                    Text("Welcome, \(profile.username)")
+                        .font(.sectionTitle)
+                    
+                    Text("Estimated max heart rate: \(profile.maxHeartRate) bpm")
+                        .foregroundStyle(.secondary)
+                }
             }
         }
+        .screenBackground()
     }
 }
 

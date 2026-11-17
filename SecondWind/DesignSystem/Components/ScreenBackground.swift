@@ -25,6 +25,15 @@ struct ScreenBackground: View {
     }
 }
 
+extension View {
+    /// Fills available space and puts ScreenBackground behind view
+    func screenBackground() -> some View {
+        self
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background { ScreenBackground() }
+    }
+}
+
 #Preview {
     ScreenBackground()
 }
