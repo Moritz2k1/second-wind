@@ -11,11 +11,20 @@ import SwiftUI
 struct ScreenBackground: View {
     
     var body: some View {
-        RadialGradient(
-            colors: [Color.secondaryAccent, Color.bg],
-            center: .center,
-            startRadius: 0,
-            endRadius: 500)
+        
+        ZStack {
+            Color.bg
+            EllipticalGradient(
+                colors: [Color.secondaryAccent.opacity(0.25), .clear],
+                center: .top,
+                startRadiusFraction: 0,
+                endRadiusFraction: 0.8
+            )
+        }
         .ignoresSafeArea()
     }
+}
+
+#Preview {
+    ScreenBackground()
 }
