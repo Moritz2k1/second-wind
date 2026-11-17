@@ -15,13 +15,17 @@ struct RootView: View {
     @AppStorage("hasCompletedProfile") private var hasCompletedProfile: Bool = false
     
     var body: some View {
-        if !hasSeenOnboarding {
-            OnboardingView()
-        } else if !hasCompletedProfile {
-            ProfileSetupView()
-        } else {
-            HomeView()
+        Group {
+            if !hasSeenOnboarding {
+                OnboardingView()
+            } else if !hasCompletedProfile {
+                ProfileSetupView()
+            } else {
+                HomeView()
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background { ScreenBackground() }
     }
 }
 
