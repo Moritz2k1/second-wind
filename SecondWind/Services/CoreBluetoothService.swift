@@ -17,6 +17,7 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
     // Variables
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral?
+    private let rrHistoryLimit: Int = 40
     
     /*
      Observables in the UI
@@ -24,6 +25,7 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
      */
     @Published private(set) var heartRate: Int = 0
     @Published private(set) var rrIntervals: [Double] = []
+    @Published private(set) var rrHistory: [Double] = []
     
     @Published private(set) var statusText: String = "Ready"
     @Published private(set) var isConnected: Bool = false
@@ -40,6 +42,13 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
     
     var isConnectedPublisher: AnyPublisher<Bool, Never> {
         $isConnected.eraseToAnyPublisher()
+    }
+    
+    override init() {
+        super.init()
+        
+        // queue = nil -> delegate callbacks arrive on main thread
+        centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     
     /// Starts scanning for bluetooth devices
@@ -63,8 +72,19 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
         isScanning = false
     }
     
+    /// Ends connection
+    func disconnect() {
+        stopScanning()
+        
+        guard let peripheral else { return }
+        centralManager.cancelPeripheralConnection(peripheral)
+    }
+    
     /// Calculate RR-Intervals
     private func parseHRData(data: Data) -> Void {
+        
+        // Flags + at least 1 byte heart rate, otherwise packet is invalid
+        guard data.count >= 2 else { return }
         
         /*
          First byte contains flags that describe the format and contents
@@ -170,6 +190,13 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
         
         // Update RR-Interval property
         rrIntervals = intervals
+        
+        // Keep only newest values
+        rrHistory.append(contentsOf: intervals)
+        
+        if rrHistory.count > rrHistoryLimit {
+            rrHistory.removeFirst(rrHistory.count - rrHistoryLimit)
+        }
         
         // map { Int($0) } converts the Double values into integers
         print("HR: \(hrVal) bpm | RR: \(intervals.map { Int($0) }) ms")
