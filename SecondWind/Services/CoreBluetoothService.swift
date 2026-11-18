@@ -220,7 +220,11 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
     }
     
     /// Called when device has been found
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral) {
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
+                        advertisementData: [String: Any], rssi RSSI: NSNumber) {
+        
+        // Name is sometimes only in advertisement data
+        let advertisedName = advertisementData[CBAdvertisementDataLocalNameKey] as? String
         
         // Guard constant for peripheral name
         guard let peripheralName = peripheral.name else { return }
@@ -253,19 +257,20 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
     }
     
     /// Disconnect (reset values)
-    func centralManager(_ central: CBCentralManager) {
+        func centralManager(_ central: CBCentralManager, didDisconnectPeripheral: CBPeripheral, error: Error?) {
         
         statusText = "Disconnected"
         isConnected = false
         heartRate = 0
         rrIntervals = []
+        rrHistory = []
     }
 }
 
 extension CoreBluetoothService: CBPeripheralDelegate {
     
     /// Discover heart rate service
-    func peripheral(_ peripheral: CBPeripheral) {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         
         // All services
         guard let services = peripheral.services else { return }
@@ -279,7 +284,7 @@ extension CoreBluetoothService: CBPeripheralDelegate {
     }
     
     /// Discover characteristics and activate notifications
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService) {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         
         // All characteristics
         guard let characteristics = service.characteristics else { return }
@@ -295,7 +300,7 @@ extension CoreBluetoothService: CBPeripheralDelegate {
     }
     
     /// Received new data
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic) {
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         
         // Check if this is heart rate characteristic
         if characteristic.uuid != BT_CHARACTERISTIC { return }

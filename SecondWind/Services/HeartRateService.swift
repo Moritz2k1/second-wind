@@ -25,4 +25,5 @@ protocol HeartRateService: AnyObject {
     
     func startScanning()
     func stopScanning()
+    func disconnect()
 }
