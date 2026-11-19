@@ -38,15 +38,15 @@ struct ProfileSetupView: View {
         VStack(spacing: Spacing.small) {
             Image(systemName: "person.crop.circle.fill")
                 .font(.system(size: 56))
-                .foregroundStyle(Color.accent)
+                .foregroundStyle(ColorToken.accent)
             
             Text("Your Profile")
                 .font(.screenTitle)
-                .foregroundStyle(Color.primaryText)
+                .foregroundStyle(ColorToken.primaryText)
             
             Text("A few details to personalize your training")
                 .font(.body)
-                .foregroundStyle(Color.secondaryText)
+                .foregroundStyle(ColorToken.secondaryText)
         }
         .multilineTextAlignment(.center)
         .frame(maxWidth: .infinity)
@@ -70,7 +70,7 @@ struct ProfileSetupView: View {
                 in: ...Date(),
                 displayedComponents: .date
             )
-                .foregroundStyle(Color.primaryText)
+                .foregroundStyle(ColorToken.primaryText)
         }
     }
     
@@ -112,14 +112,14 @@ private struct ProfileSection<Content: View>: View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             Text(title)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Color.secondaryText)
+                .foregroundStyle(ColorToken.secondaryText)
             
             content.cardStyle()
             
             if let footer {
                 Text(footer)
                     .font(.footnote)
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(ColorToken.secondaryText)
             }
         }
     }

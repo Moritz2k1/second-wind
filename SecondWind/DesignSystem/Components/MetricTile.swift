@@ -23,11 +23,11 @@ struct MetricTile: View {
             HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
                 Text(value)
                     .font(.metric)
-                    .foregroundStyle(Color.primaryText)
+                    .foregroundStyle(ColorToken.primaryText)
                 
                 Text(unit)
                     .font(.body)
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(ColorToken.secondaryText)
             }
         }
         .cardStyle()

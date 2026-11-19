@@ -14,7 +14,7 @@ struct CardStyle: ViewModifier {
         content
             .padding(Spacing.medium)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.card)
+            .background(ColorToken.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: Radius.card))
             .overlay(
                 RoundedRectangle(cornerRadius: Radius.card)

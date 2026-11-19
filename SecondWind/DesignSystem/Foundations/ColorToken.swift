@@ -18,12 +18,16 @@ extension Color {
     static let secondaryAccent: Color = ColorPalette.teal
     
     // Backgrounds
-    static let bg: Color = ColorPalette.navy900
+    static let background: Color = ColorPalette.navy900
     
     // Text Colors
     static let primaryText: Color = ColorPalette.white
     static let secondaryText: Color = ColorPalette.grey
     static let onAccent: Color = ColorPalette.navy900
+    
+    // Buttons
+    static let buttonBackground: Color = ColorPalette.cyan
+    static let secondaryButtonBackground: Color = ColorPalette.navy800
     
     // Cards
     static let cardBackground: Color = ColorPalette.navy800

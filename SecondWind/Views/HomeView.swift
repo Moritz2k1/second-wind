@@ -50,16 +50,16 @@ struct HomeView: View {
     }
     
     private var connectionColor: Color {
-        if bluetooth.isScanning { return Color.scanning }
-        if bluetooth.isConnected { return Color.connected }
-        return Color.secondaryText
+        if bluetooth.isScanning { return ColorToken.scanning }
+        if bluetooth.isConnected { return ColorToken.connected }
+        return ColorToken.secondaryText
     }
     
     private var header: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             Text("Hey, \(profile?.username ?? "Runner")")
                 .font(.screenTitle)
-                .foregroundStyle(Color.primaryText)
+                .foregroundStyle(ColorToken.primaryText)
             
             ConnectionPill(text: bluetooth.statusText, color: connectionColor)
         }
@@ -71,12 +71,12 @@ struct HomeView: View {
             HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
                 Image(systemName: "heart.fill")
                     .font(.title)
-                    .foregroundStyle(Color.zone5)
+                    .foregroundStyle(ColorToken.zone5)
                     .symbolEffect(.pulse, options: .repeating, isActive: bluetooth.heartRate > 0)
                 
                 Text(heartRateText)
                     .font(.metric)
-                    .foregroundStyle(Color.primaryText)
+                    .foregroundStyle(ColorToken.primaryText)
                     .contentTransition(.numericText())
                     .animation(.default, value: bluetooth.heartRate)
                 
@@ -100,7 +100,7 @@ struct HomeView: View {
             y: .value("RR", sample.element)
         )
         .interpolationMethod(.catmullRom)
-        .foregroundStyle(Color.accent)
+        .foregroundStyle(ColorToken.accent)
         }
         .chartXAxis(.hidden)
         .chartYScale(domain: .automatic(includesZero: false))
@@ -112,19 +112,19 @@ struct HomeView: View {
             HStack {
                 Text("RR intervals")
                     .font(.headline)
-                    .foregroundStyle(Color.primaryText)
+                    .foregroundStyle(ColorToken.primaryText)
                 
                 Spacer()
                 
                 Text(rrText)
                     .font(.subheadline.monospacedDigit())
-                    .foregroundStyle(Color.accent)
+                    .foregroundStyle(ColorToken.accent)
             }
             
             if bluetooth.rrHistory.isEmpty {
                 Text("Connect your chest strap to see the time between heartbeats")
                     .font(.subheadline)
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(ColorToken.secondaryText)
             }
             else {
                 rrChart
@@ -162,11 +162,11 @@ private struct ConnectionPill: View {
             
             Text(text)
                 .font(.subheadline)
-                .foregroundStyle(Color.primaryText)
+                .foregroundStyle(ColorToken.primaryText)
         }
         .padding(.horizontal, Spacing.medium)
         .padding(.vertical, Spacing.small)
-        .background(Color.card)
+        .background(ColorToken.cardBackground)
         .clipShape(Capsule())
     }
 }

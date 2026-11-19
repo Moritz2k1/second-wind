@@ -34,15 +34,15 @@ struct OnboardingView: View {
     private var hero: some View {
         ZStack {
             Circle()
-                .fill(Color.accent.opacity(0.06))
+                .fill(ColorToken.accent.opacity(0.06))
                 .frame(width: 200, height: 200)
             
             Circle()
-                .fill(Color.accent.opacity(0.12))
+                .fill(ColorToken.accent.opacity(0.12))
                 .frame(width: 150, height: 150)
             
             Circle()
-                .stroke(Color.accent.opacity(0.35), lineWidth: 1)
+                .stroke(ColorToken.accent.opacity(0.35), lineWidth: 1)
                 .frame(width: 150, height: 150)
             
             heart
@@ -52,20 +52,20 @@ struct OnboardingView: View {
     private var heart: some View {
         Image(systemName: "heart.fill")
             .font(.system(size: 64, weight: .semibold))
-            .foregroundStyle(Color.accent)
+            .foregroundStyle(ColorToken.accent)
             .symbolEffect(.pulse, options: .repeating)
-            .shadow(color: Color.accent.opacity(0.6), radius: 20)
+            .shadow(color: ColorToken.accent.opacity(0.6), radius: 20)
     }
     
     private var header: some View {
         VStack(spacing: Spacing.small) {
             Text("Chest strap required")
                 .font(.screenTitle)
-                .foregroundStyle(Color.primaryText)
+                .foregroundStyle(ColorToken.primaryText)
             
             Text("Second Wind needs a Polar H10 to precisely measure your heart")
                 .font(.body)
-                .foregroundStyle(Color.secondaryText)
+                .foregroundStyle(ColorToken.secondaryText)
         }
         .multilineTextAlignment(.center)
     }
@@ -121,9 +121,9 @@ private struct OnboardingInfoRow: View {
     private var icon: some View {
         Image(systemName: systemImage)
             .font(.title3)
-            .foregroundStyle(Color.accent)
+            .foregroundStyle(ColorToken.accent)
             .frame(width: 44, height: 44)
-            .background(Color.cardSecondary.opacity(0.6))
+            .background(ColorToken.iconBackground)
             .clipShape(RoundedRectangle(cornerRadius: Radius.button))
     }
     
@@ -131,11 +131,11 @@ private struct OnboardingInfoRow: View {
         VStack(alignment: .leading, spacing: Spacing.small / 2) {
             Text(title)
                 .font(.headline)
-                .foregroundStyle(Color.primaryText)
+                .foregroundStyle(ColorToken.primaryText)
             
             Text(description)
                 .font(.subheadline)
-                .foregroundStyle(Color.secondaryText)
+                .foregroundStyle(ColorToken.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
