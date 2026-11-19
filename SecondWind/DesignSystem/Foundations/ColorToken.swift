@@ -7,28 +7,42 @@
 
 import SwiftUI
 
+// Alias so it easiert to differentiate
+typealias ColorToken = Color
+
+/// Semantic Tokens
 extension Color {
-    
-    /// Create color from hex value
-    init (hex: UInt32) {
-        let red: Double = Double((hex >> 16) & 0xFF) / 255
-        let green: Double = Double((hex >> 8) & 0xFF) / 255
-        let blue: Double = Double(hex & 0xFF) / 255
-        self.init(red: red, green: green, blue: blue)
-    }
     
     // Brand
     static let accent: Color = ColorPalette.cyan
     static let secondaryAccent: Color = ColorPalette.teal
     
     // Backgrounds
-    static let bg: Color = Color(hex: 0x0b132b)
-    static let card: Color = Color(hex: 0x1c2541)
-    static let cardSecondary: Color = Color(hex: 0x3a506b)
+    static let bg: Color = ColorPalette.navy900
     
     // Text Colors
-    static let primaryText: Color = Color.white
-    static let secondaryText: Color = Color.white.opacity(0.65)
+    static let primaryText: Color = ColorPalette.white
+    static let secondaryText: Color = ColorPalette.grey
+    static let onAccent: Color = ColorPalette.navy900
+    
+    // Cards
+    static let cardBackground: Color = ColorPalette.navy800
+    static let cardBorder: Color = ColorPalette.white.opacity(0.08)
+    
+    // Pills
+    static let pillBackground: Color = ColorPalette.navy800
+    
+    // Icons
+    static let iconBackground: Color = ColorPalette.navy600.opacity(0.6)
+    static let heartIcon: Color = ColorPalette.pink
+    
+    // Charts
+    static let chartLine: Color = ColorPalette.cyan
+    
+    // Connection colors
+    static let connected: Color = ColorPalette.green
+    static let scanning: Color = ColorPalette.yellow
+    static let disconnected: Color = ColorPalette.grey
     
     // Zone colors
     static let zone1: Color = ColorPalette.blue
@@ -36,10 +50,6 @@ extension Color {
     static let zone3: Color = ColorPalette.yellow
     static let zone4: Color = ColorPalette.orange
     static let zone5: Color = ColorPalette.pink
-    
-    // Connection colors
-    static let scanning: Color = Color(hex: 0xffc75f)
-    static let connected: Color = Color(hex: 0x00c9a7)
     
     /// Returns color for zone id
     static func zoneColor(zoneId: Int) -> Color {

@@ -29,3 +29,14 @@ enum ColorPalette {
     static let white: Color = Color.white
     static let grey: Color = Color.white.opacity(0.65)
 }
+
+extension Color {
+    
+    /// Create color from hex value
+    init (hex: UInt32) {
+        let red: Double = Double((hex >> 16) & 0xFF) / 255
+        let green: Double = Double((hex >> 8) & 0xFF) / 255
+        let blue: Double = Double(hex & 0xFF) / 255
+        self.init(red: red, green: green, blue: blue)
+    }
+}
