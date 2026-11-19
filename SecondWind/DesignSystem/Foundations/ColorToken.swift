@@ -13,21 +13,30 @@ typealias ColorToken = Color
 /// Semantic Tokens
 extension Color {
     
-    // Brand
+    // App tint
     static let accent: Color = ColorPalette.cyan
-    static let secondaryAccent: Color = ColorPalette.teal
     
-    // Backgrounds
-    static let background: Color = ColorPalette.navy900
-    
-    // Text Colors
+    // Text
     static let primaryText: Color = ColorPalette.white
     static let secondaryText: Color = ColorPalette.grey
-    static let onAccent: Color = ColorPalette.navy900
     
-    // Buttons
-    static let buttonBackground: Color = ColorPalette.cyan
+    // Screen
+    static let screenBackground: Color = ColorPalette.navy900
+    static let screenGlow: Color = ColorPalette.teal.opacity(0.25)
+    
+    // Header
+    static let headerIcon: Color = ColorPalette.cyan
+    static let headerTitle: Color = ColorPalette.white
+    static let headerSubtitle: Color = ColorPalette.grey
+    
+    // Primary Button
+    static let primaryButtonBackground: Color = ColorPalette.cyan
+    static let primaryButtonText: Color = ColorPalette.navy900
+    
+    // Secondary Button
     static let secondaryButtonBackground: Color = ColorPalette.navy800
+    static let secondaryButtonText: Color = ColorPalette.cyan
+    static let secondaryButtonBorder: Color = ColorPalette.cyan
     
     // Cards
     static let cardBackground: Color = ColorPalette.navy800
@@ -35,13 +44,33 @@ extension Color {
     
     // Pills
     static let pillBackground: Color = ColorPalette.navy800
+    static let pillText: Color = ColorPalette.white
     
     // Icons
     static let iconBackground: Color = ColorPalette.navy600.opacity(0.6)
+    static let iconForeground: Color = ColorPalette.cyan
+    
+    // Inputs
+    static let inputText: Color = ColorPalette.white
+    
+    // Metrics
+    static let metricLabel: Color = ColorPalette.grey
+    static let metricValue: Color = ColorPalette.white
+    static let metricUnit: Color = ColorPalette.grey
+    
+    // Heart rate
     static let heartIcon: Color = ColorPalette.pink
     
     // Charts
     static let chartLine: Color = ColorPalette.cyan
+    static let chartValue: Color = ColorPalette.cyan
+    
+    // Onboarding hero
+    static let heroIcon: Color = ColorPalette.cyan
+    static let heroShadow: Color = ColorPalette.cyan.opacity(0.6)
+    static let heroRing: Color = ColorPalette.cyan.opacity(0.35)
+    static let heroGlowInner: Color = ColorPalette.cyan.opacity(0.12)
+    static let heroGlowOuter: Color = ColorPalette.cyan.opacity(0.06)
     
     // Connection colors
     static let connected: Color = ColorPalette.green
