@@ -1,20 +1,12 @@
 //
-//  Color.swift
+//  ColorToken.swift
 //  SecondWind
 //
-//  Created by Moritz Gutschi on 16.11.26.
+//  Created by Moritz Gutschi on 19.11.26.
 //
 
 import SwiftUI
 
-/*
- Deep Blue Sea Color Palette
- Background: 0b132b - Very dark navy
- Cards: 1c2541 - Dark navy
- Secondary Cards: 3a506b - Navy
- Secondary accent: 5bc0be - Teal
- Accent: 6fffe9 - Cyan
- */
 extension Color {
     
     /// Create color from hex value
@@ -26,8 +18,8 @@ extension Color {
     }
     
     // Brand
-    static let accent: Color = Color(hex: 0x6fffe9)
-    static let secondaryAccent: Color = Color(hex: 0x5bc0be)
+    static let accent: Color = ColorPalette.cyan
+    static let secondaryAccent: Color = ColorPalette.teal
     
     // Backgrounds
     static let bg: Color = Color(hex: 0x0b132b)
@@ -39,11 +31,11 @@ extension Color {
     static let secondaryText: Color = Color.white.opacity(0.65)
     
     // Zone colors
-    static let zone1: Color = Color(hex: 0x0081cf)
-    static let zone2: Color = Color(hex: 0x00c9a7)
-    static let zone3: Color = Color(hex: 0xffc75f)
-    static let zone4: Color = Color(hex: 0xff9671)
-    static let zone5: Color = Color(hex: 0xff6f91)
+    static let zone1: Color = ColorPalette.blue
+    static let zone2: Color = ColorPalette.green
+    static let zone3: Color = ColorPalette.yellow
+    static let zone4: Color = ColorPalette.orange
+    static let zone5: Color = ColorPalette.pink
     
     // Connection colors
     static let scanning: Color = Color(hex: 0xffc75f)
@@ -61,3 +53,4 @@ extension Color {
         }
     }
 }
+
