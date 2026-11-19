@@ -45,6 +45,10 @@ extension Color {
     static let zone4: Color = Color(hex: 0xff9671)
     static let zone5: Color = Color(hex: 0xff6f91)
     
+    // Connection colors
+    static let scanning: Color = Color(hex: 0xffc75f)
+    static let connected: Color = Color(hex: 0x00c9a7)
+    
     /// Returns color for zone id
     static func zoneColor(zoneId: Int) -> Color {
         switch zoneId {
