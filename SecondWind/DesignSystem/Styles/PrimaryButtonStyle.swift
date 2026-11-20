@@ -16,7 +16,7 @@ struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: ButtonStyle.Configuration) -> some View {
         configuration.label
             .font(.headline)
-            .foregroundStyle(Color.background)
+            .foregroundStyle(Color.primaryButtonBackground)
             .frame(maxWidth: .infinity)
             .padding(.vertical, Spacing.medium)
             .background(ColorToken.accent.opacity(isEnabled ? 1.0 : 0.35))

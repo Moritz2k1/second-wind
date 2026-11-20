@@ -58,16 +58,10 @@ struct OnboardingView: View {
     }
     
     private var header: some View {
-        VStack(spacing: Spacing.small) {
-            Text("Chest strap required")
-                .font(.screenTitle)
-                .foregroundStyle(ColorToken.primaryText)
-            
-            Text("Second Wind needs a Polar H10 to precisely measure your heart")
-                .font(.body)
-                .foregroundStyle(ColorToken.secondaryText)
-        }
-        .multilineTextAlignment(.center)
+        ScreenHeader(
+            title: "Chest strap required",
+            subtitle: "Second Wind needs a Polar H10 to precisely measure your heart"
+        )
     }
     
     private var infoCard: some View {

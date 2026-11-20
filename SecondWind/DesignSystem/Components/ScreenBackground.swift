@@ -13,9 +13,9 @@ struct ScreenBackground: View {
     var body: some View {
         
         ZStack {
-            Color.background
+            ColorToken.screenBackground
             EllipticalGradient(
-                colors: [Color.secondaryAccent.opacity(0.25), .clear],
+                colors: [ColorToken.screenGlow, .clear],
                 center: .top,
                 startRadiusFraction: 0,
                 endRadiusFraction: 0.8

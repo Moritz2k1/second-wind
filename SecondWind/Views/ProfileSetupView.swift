@@ -35,21 +35,12 @@ struct ProfileSetupView: View {
     }
     
     private var header: some View {
-        VStack(spacing: Spacing.small) {
-            Image(systemName: "person.crop.circle.fill")
-                .font(.system(size: 56))
-                .foregroundStyle(ColorToken.accent)
-            
-            Text("Your Profile")
-                .font(.screenTitle)
-                .foregroundStyle(ColorToken.primaryText)
-            
-            Text("A few details to personalize your training")
-                .font(.body)
-                .foregroundStyle(ColorToken.secondaryText)
-        }
-        .multilineTextAlignment(.center)
-        .frame(maxWidth: .infinity)
+        
+        ScreenHeader(
+            title: "Your Profile",
+            subtitle: "A few details to personalize your training",
+            systemImage: "person.crop.circle.fill"
+        )
     }
     
     private var nameSection: some View {

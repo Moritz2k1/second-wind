@@ -56,14 +56,12 @@ struct HomeView: View {
     }
     
     private var header: some View {
-        VStack(alignment: .leading, spacing: Spacing.small) {
-            Text("Hey, \(profile?.username ?? "Runner")")
-                .font(.screenTitle)
-                .foregroundStyle(ColorToken.primaryText)
-            
+        ScreenHeader(
+            title: "Hey, \(profile?.username ?? "Runner")",
+            alignment: .leading
+        ) {
             ConnectionPill(text: bluetooth.statusText, color: connectionColor)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var heartRateCard: some View {
