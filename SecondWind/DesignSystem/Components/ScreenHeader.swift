@@ -68,3 +68,23 @@ struct ScreenHeader<Accessory: View>: View {
         alignment == .center ? .center : .leading
     }
 }
+
+// Header without accessory
+extension ScreenHeader where Accessory == EmptyView {
+    
+    init(
+        title: String,
+        subtitle: String? = nil,
+        systemImage: String? = nil,
+        alignment: HeaderAlignment = .center
+    ) {
+        self.init(
+            title: title,
+            subtitle: subtitle,
+            systemImage: systemImage,
+            alignment: alignment
+        ) {
+            EmptyView()
+        }
+    }
+}
