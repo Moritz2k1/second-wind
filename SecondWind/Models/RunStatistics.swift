@@ -1,5 +1,5 @@
 //
-//  Statistics.swift
+//  RunStatistics.swift
 //  SecondWind
 //
 //  Created by Moritz Gutschi on 24.11.26.
@@ -16,7 +16,7 @@ struct WeeklyDistance: Identifiable {
 }
 
 /// Totals calculated from a list of runs
-struct Statistics {
+struct RunStatistics {
     
     let runCount: Int
     let totalDistanceKm: Double
