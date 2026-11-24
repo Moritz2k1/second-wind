@@ -21,7 +21,7 @@ struct RootView: View {
             } else if !hasCompletedProfile {
                 ProfileSetupView()
             } else {
-                HomeView()
+                MainTabView()
             }
         }
     }
