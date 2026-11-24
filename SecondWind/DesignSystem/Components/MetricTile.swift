@@ -18,16 +18,16 @@ struct MetricTile: View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             Text(title)
                 .font(.caption)
-                .foregroundStyle(Color.secondaryText)
+                .foregroundStyle(ColorToken.metricLabel)
             
             HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
                 Text(value)
                     .font(.metric)
-                    .foregroundStyle(ColorToken.primaryText)
+                    .foregroundStyle(ColorToken.metricValue)
                 
                 Text(unit)
                     .font(.body)
-                    .foregroundStyle(ColorToken.secondaryText)
+                    .foregroundStyle(ColorToken.metricUnit)
             }
         }
         .cardStyle()

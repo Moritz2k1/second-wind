@@ -52,7 +52,7 @@ struct HomeView: View {
     private var connectionColor: Color {
         if bluetooth.isScanning { return ColorToken.scanning }
         if bluetooth.isConnected { return ColorToken.connected }
-        return ColorToken.secondaryText
+        return ColorToken.disconnected
     }
     
     private var header: some View {
@@ -69,18 +69,18 @@ struct HomeView: View {
             HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
                 Image(systemName: "heart.fill")
                     .font(.title)
-                    .foregroundStyle(ColorToken.zone5)
+                    .foregroundStyle(ColorToken.heartIcon)
                     .symbolEffect(.pulse, options: .repeating, isActive: bluetooth.heartRate > 0)
                 
                 Text(heartRateText)
                     .font(.metric)
-                    .foregroundStyle(ColorToken.primaryText)
+                    .foregroundStyle(ColorToken.metricValue)
                     .contentTransition(.numericText())
                     .animation(.default, value: bluetooth.heartRate)
                 
                 Text("bpm")
                     .font(.body)
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(ColorToken.metricUnit)
             }
             
             if let currentZone {
@@ -98,7 +98,7 @@ struct HomeView: View {
             y: .value("RR", sample.element)
         )
         .interpolationMethod(.catmullRom)
-        .foregroundStyle(ColorToken.accent)
+        .foregroundStyle(ColorToken.chartLine)
         }
         .chartXAxis(.hidden)
         .chartYScale(domain: .automatic(includesZero: false))
@@ -116,7 +116,7 @@ struct HomeView: View {
                 
                 Text(rrText)
                     .font(.subheadline.monospacedDigit())
-                    .foregroundStyle(ColorToken.accent)
+                    .foregroundStyle(ColorToken.chartValue)
             }
             
             if bluetooth.rrHistory.isEmpty {
@@ -160,11 +160,11 @@ private struct ConnectionPill: View {
             
             Text(text)
                 .font(.subheadline)
-                .foregroundStyle(ColorToken.primaryText)
+                .foregroundStyle(ColorToken.pillText)
         }
         .padding(.horizontal, Spacing.medium)
         .padding(.vertical, Spacing.small)
-        .background(ColorToken.cardBackground)
+        .background(ColorToken.pillBackground)
         .clipShape(Capsule())
     }
 }

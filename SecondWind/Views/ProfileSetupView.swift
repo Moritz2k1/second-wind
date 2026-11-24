@@ -49,7 +49,7 @@ struct ProfileSetupView: View {
                 .textInputAutocapitalization(.words)
                 .autocorrectionDisabled()
                 .submitLabel(.done)
-                .foregroundStyle(Color.primaryText)
+                .foregroundStyle(ColorToken.inputText)
         }
     }
     
@@ -61,7 +61,7 @@ struct ProfileSetupView: View {
                 in: ...Date(),
                 displayedComponents: .date
             )
-                .foregroundStyle(ColorToken.primaryText)
+                .foregroundStyle(ColorToken.inputText)
         }
     }
     

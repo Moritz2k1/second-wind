@@ -34,15 +34,15 @@ struct OnboardingView: View {
     private var hero: some View {
         ZStack {
             Circle()
-                .fill(ColorToken.accent.opacity(0.06))
+                .fill(ColorToken.heroGlowOuter)
                 .frame(width: 200, height: 200)
             
             Circle()
-                .fill(ColorToken.accent.opacity(0.12))
+                .fill(ColorToken.heroGlowInner)
                 .frame(width: 150, height: 150)
             
             Circle()
-                .stroke(ColorToken.accent.opacity(0.35), lineWidth: 1)
+                .stroke(ColorToken.heroRing, lineWidth: 1)
                 .frame(width: 150, height: 150)
             
             heart
@@ -52,9 +52,9 @@ struct OnboardingView: View {
     private var heart: some View {
         Image(systemName: "heart.fill")
             .font(.system(size: 64, weight: .semibold))
-            .foregroundStyle(ColorToken.accent)
+            .foregroundStyle(ColorToken.heroIcon)
             .symbolEffect(.pulse, options: .repeating)
-            .shadow(color: ColorToken.accent.opacity(0.6), radius: 20)
+            .shadow(color: ColorToken.heroShadow, radius: 20)
     }
     
     private var header: some View {
@@ -115,7 +115,7 @@ private struct OnboardingInfoRow: View {
     private var icon: some View {
         Image(systemName: systemImage)
             .font(.title3)
-            .foregroundStyle(ColorToken.accent)
+            .foregroundStyle(ColorToken.iconForeground)
             .frame(width: 44, height: 44)
             .background(ColorToken.iconBackground)
             .clipShape(RoundedRectangle(cornerRadius: Radius.button))

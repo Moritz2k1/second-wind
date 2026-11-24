@@ -38,7 +38,7 @@ struct ScreenHeader<Accessory: View>: View {
         if let systemImage {
             Image(systemName: systemImage)
                 .font(.system(size: 56))
-                .foregroundStyle(ColorToken.heartIcon)
+                .foregroundStyle(ColorToken.headerIcon)
         }
     }
     
