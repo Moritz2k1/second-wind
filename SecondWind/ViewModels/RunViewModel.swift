@@ -40,6 +40,18 @@ class RunViewModel {
     // Updates elapsed every second
     private var timerTask: Task<Void , Never>? = nil
     
+    // Latest heart rate from chest strap
+    private(set) var heartRate: Int = 0
+    
+    // Time spent in target zone
+    private(set) var timeInTargetZone: TimeInterval = 0
+    
+    // Last time zone time was counted
+    private var lastZoneCheck: Date? = nil
+    
+    // Needed for zone boundaries in bpm
+    private let maxHeartRate: Int = UserProfile.loadProfile()?.maxHeartRate ?? 0
+    
     /// Zone matching selected id
     var targetZone: TrainingZone? {
         for zone in TrainingZone.zones {
@@ -51,6 +63,18 @@ class RunViewModel {
         return nil
     }
     
+    /// True if current heart rate is inside target zone
+    var isInTargetZone: Bool {
+        guard let targetZone, heartRate > 0, maxHeartRate > 0 else { return false }
+        return targetZone.containsHR(HR: heartRate, maxHR: maxHeartRate)
+    }
+    
+    /// Share of run in target zone so far
+    var timeInZoneRatio: Double {
+        guard elapsed > 0 else { return 0 }
+        return min(timeInTargetZone / elapsed, 1)
+    }
+    
     /// Starts new run with selected type and zone
     func start() {
         guard state == .idle else { return }
@@ -60,6 +84,8 @@ class RunViewModel {
         accumulated = 0
         elapsed = 0
         activeSince = .now
+        timeInTargetZone = 0
+        lastZoneCheck = .now
         
         state = .active
         startTimer()
@@ -73,6 +99,7 @@ class RunViewModel {
         updateElapsed()
         accumulated = elapsed
         activeSince = nil
+        lastZoneCheck = nil
         
         state = .paused
         stopTimer()
@@ -84,6 +111,7 @@ class RunViewModel {
         
         // New active part starts now
         activeSince = .now
+        lastZoneCheck = .now
         state = .active
         startTimer()
     }
@@ -94,10 +122,17 @@ class RunViewModel {
         
         // Last update
         updateElapsed()
+        updateZoneTime()
+        lastZoneCheck = nil
         activeSince = nil
         
         state = .idle
         stopTimer()
+    }
+    
+    /// Called by view whenever strap sends new value
+    func update(heartRate: Int) {
+        self.heartRate = heartRate
     }
     
     static func clock(_ seconds: TimeInterval) -> String {
@@ -117,6 +152,7 @@ class RunViewModel {
         }
     }
     
+    /// Stops timer
     private func stopTimer() {
         timerTask?.cancel()
         timerTask = nil
@@ -125,11 +161,24 @@ class RunViewModel {
     /// Runs every second while active
     private func tick() {
         updateElapsed()
+        updateZoneTime()
     }
     
     /// Run time = time before pause + time since resume
     private func updateElapsed() {
         guard let activeSince else { return }
         elapsed = accumulated + Date.now.timeIntervalSince(activeSince)
+    }
+    
+    /// Adds time since last check if heart rate was in target zone
+    private func updateZoneTime() {
+        guard let lastZoneCheck else { return }
+        
+        let now: Date = .now
+        if isInTargetZone {
+            timeInTargetZone += now.timeIntervalSince(lastZoneCheck)
+        }
+        
+        self.lastZoneCheck = now
     }
 }
