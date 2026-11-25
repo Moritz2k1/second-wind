@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 // Main navigation - tab bar at the bottom
 struct MainTabView: View {
@@ -16,7 +17,7 @@ struct MainTabView: View {
             }
             
             Tab("History", systemImage: "clock.arrow.circlepath") {
-                ComingSoonView(title: "History", systemImage: "clock.arrow.circlepath")
+                HistoryView()
             }
             
             Tab("Profile", systemImage: "person.crop.circle") {
@@ -29,4 +30,5 @@ struct MainTabView: View {
 
 #Preview {
     MainTabView()
+        .modelContainer(.preview)
 }

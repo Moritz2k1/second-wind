@@ -16,5 +16,8 @@ struct SecondWindApp: App {
             RootView()
                 .tint(Color.accent)
         }
+        
+        // Stores run on device
+        .modelContainer(for: Run.self)
     }
 }

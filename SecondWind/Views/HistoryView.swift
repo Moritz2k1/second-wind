@@ -57,7 +57,7 @@ struct HistoryView: View {
     
     private var filterPicker: some View {
         Picker("Run type", selection: $viewModel.filter) {
-            ForEach(RunFilter.allCases, id: \.self) { fitler in
+            ForEach(RunFilter.allCases, id: \.self) { filter in
                 Text(filter.title)
             }
         }
@@ -76,24 +76,24 @@ struct HistoryView: View {
                 StatTile(
                     title: "Distance",
                     value: "≈ \(RunFormat.distance(statistics.totalDistanceKm))",
-                    unit: "km"
+                    unit: "km",
                     systemImage: "map"
                 )
             }
-        }
-        
-        GridRow {
-            StatTile(
-                title: "Time",
-                value: RunFormat.duration(statistics.totalDuration),
-                systemImage: "clock"
-            )
             
-            StatTile(
-                title: "In target zone",
-                value: RunFormat.percent(statistics.timeInZoneRatio),
-                systemImage: "target"
-            )
+            GridRow {
+                StatTile(
+                    title: "Time",
+                    value: RunFormat.duration(statistics.totalDuration),
+                    systemImage: "clock"
+                )
+                
+                StatTile(
+                    title: "In target zone",
+                    value: RunFormat.percent(statistics.timeInZoneRatio),
+                    systemImage: "target"
+                )
+            }
         }
     }
     
