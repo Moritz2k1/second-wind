@@ -139,4 +139,33 @@ struct HistoryView: View {
         .cardStyle()
     }
     
+    private func runList(_ runs: [Run]) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.medium) {
+            Text("Runs")
+                .font(.headline)
+                .foregroundStyle(ColorToken.primaryText)
+            
+            if runs.isEmpty {
+                Text(viewModel.emptyFilterText)
+                    .font(.subheadline)
+                    .foregroundStyle(ColorToken.secondaryText)
+            } else {
+                LazyVStack(spacing: Spacing.medium) {
+                    ForEach(runs) { run in
+                        RunRow(run: run)
+                    }
+                }
+            }
+        }
+    }
+}
+
+#Preview("With runs") {
+    HistoryView()
+        .modelContainer(.preview)
+}
+
+#Preview("Empty") {
+    HistoryView()
+        .modelContainer(for: Run.self, inMemory: true)
 }
