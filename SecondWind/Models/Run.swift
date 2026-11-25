@@ -20,6 +20,14 @@ enum RunType: String, Codable, CaseIterable {
         }
     }
     
+    // Short label for pickers
+    var shortTitle: String {
+        switch self {
+        case .outdoor: return "Outdoor"
+        case .indoor: return "Treadmill"
+        }
+    }
+    
     var systemImage: String {
         switch self {
         case .outdoor: return "figure.run"

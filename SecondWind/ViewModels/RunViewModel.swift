@@ -98,6 +98,7 @@ class RunViewModel {
         
         // Keep time run so far
         updateElapsed()
+        updateZoneTime()
         accumulated = elapsed
         activeSince = nil
         lastZoneCheck = nil
@@ -140,11 +141,6 @@ class RunViewModel {
     /// Called by view whenever strap sends new value
     func update(heartRate: Int) {
         self.heartRate = heartRate
-    }
-    
-    static func clock(_ seconds: TimeInterval) -> String {
-        let pattern: Duration.TimeFormatStyle.Pattern = seconds >= 3600 ? .hourMinuteSecond : .minuteSecond
-        return Duration.seconds(seconds).formatted(.time(pattern: pattern))
     }
     
     /// Calls tick every second until stopped

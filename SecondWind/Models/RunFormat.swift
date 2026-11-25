@@ -14,6 +14,12 @@ enum RunFormat {
         Duration.seconds(seconds).formatted(.units(allowed: [.hours, .minutes], width: .narrow))
     }
     
+    /// e.g. "12:34" or "1:02:05" for live timer
+    static func clock(_ seconds: TimeInterval) -> String {
+        let pattern: Duration.TimeFormatStyle.Pattern = seconds >= 3600 ? .hourMinuteSecond : .minuteSecond
+        return Duration.seconds(seconds).formatted(.time(pattern: pattern))
+    }
+    
     /// e.g. "6.2" - 1 decimal
     static func distance(_ km: Double) -> String {
         km.formatted(.number.precision(.fractionLength(1)))
