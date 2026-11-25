@@ -7,6 +7,7 @@
 
 import Foundation
 import Observation
+import SwiftData
 
 /// Phase of current run
 enum RunState {
@@ -117,7 +118,7 @@ class RunViewModel {
     }
     
     /// Finishes run
-    func end() {
+    func end(saveTo context: ModelContext) {
         guard state != .idle else { return }
         
         // Last update
@@ -128,6 +129,12 @@ class RunViewModel {
         
         state = .idle
         stopTimer()
+        
+        // Too short runs are dropped
+        guard let run = makeRun() else { return }
+        
+        context.insert(run)
+        try? context.save()
     }
     
     /// Called by view whenever strap sends new value
@@ -180,5 +187,19 @@ class RunViewModel {
         }
         
         self.lastZoneCheck = now
+    }
+    
+    /// Turns current session into run that can be saved
+    private func makeRun() -> Run? {
+        guard let startDate, elapsed >= Configuration.minimumRunDuration else { return nil }
+        
+        return Run(
+            startDate: startDate,
+            duration: elapsed,
+            type: runType,
+            distanceKm: 0,
+            targetZoneId: targetZoneId,
+            timeInTargetZone: timeInTargetZone
+        )
     }
 }

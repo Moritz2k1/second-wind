@@ -14,4 +14,7 @@ struct Configuration {
     
     // Define Feedback Interval in Seconds
     static let feedbackInterval: TimeInterval = 30
+    
+    // Shorter runs are not saved
+    static let minimumRunDuration: TimeInterval = 60
 }
