@@ -25,6 +25,21 @@ class RunViewModel {
     // Only changed by start, pause, resume and end
     private(set) var state: RunState = .idle
     
+    // When run was started
+    private(set) var startDate: Date? = nil
+    
+    // Run time without pauses
+    private(set) var elapsed: TimeInterval = 0
+    
+    // Time collected before last pause
+    private var accumulated: TimeInterval = 0
+    
+    // Start of current active part
+    private var activeSince: Date? = nil
+    
+    // Updates elapsed every second
+    private var timerTask: Task<Void , Never>? = nil
+    
     /// Zone matching selected id
     var targetZone: TrainingZone? {
         for zone in TrainingZone.zones {
@@ -58,5 +73,33 @@ class RunViewModel {
     func end() {
         guard state != .idle else { return }
         state = .idle
+    }
+    
+    /// Calls tick every second until stopped
+    private func startTimer() {
+        timerTask?.cancel()
+        
+        timerTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(1))
+                self?.tick()
+            }
+        }
+    }
+    
+    private func stopTimer() {
+        timerTask?.cancel()
+        timerTask = nil
+    }
+    
+    /// Runs every second while active
+    private func tick() {
+        updateElapsed()
+    }
+    
+    /// Run time = time before pause + time since resume
+    private func updateElapsed() {
+        guard let activeSince else { return }
+        elapsed = accumulated + Date.now.timeIntervalSince(activeSince)
     }
 }
