@@ -17,11 +17,19 @@ struct HomeView: View {
     // Owns Bluetooth connection while Home Screen exists
     @StateObject private var bluetooth: CoreBluetoothService = CoreBluetoothService()
     
+    // Setup and state of next or current run
+    @State private var runViewModel: RunViewModel = RunViewModel()
+    
     var body: some View {
         ScrollView {
             VStack(spacing: Spacing.large) {
                 header
                 heartRateCard
+                
+                if showsRunSetup {
+                    runSetupCard
+                }
+                
                 rrCard
             }
             .padding(.horizontal, Spacing.large)
@@ -29,10 +37,19 @@ struct HomeView: View {
         }
         .scrollBounceBehavior(.basedOnSize)
         .safeAreaInset(edge: .bottom) {
-            connectionButton
+            bottomButtons
                 .padding(Spacing.large)
         }
         .screenBackground()
+        // Pass every new value from strap to run
+        .onChange(of: bluetooth.heartRate) { _, newValue in
+            runViewModel.update(heartRate: newValue)
+        }
+    }
+    
+    // Setup only makes sense with strap connected and no run going on
+    private var showsRunSetup: Bool {
+        bluetooth.isConnected && runViewModel.state == .idle
     }
     
     private var currentZone: TrainingZone? {
@@ -131,19 +148,92 @@ struct HomeView: View {
         .cardStyle()
     }
     
-    @ViewBuilder
-        private var connectionButton: some View {
-            if bluetooth.isConnected {
-                Button("Disconnect") { bluetooth.disconnect() }
-                    .buttonStyle(.secondary)
-            } else if bluetooth.isScanning {
-                Button("Stop searching") { bluetooth.stopScanning() }
-                    .buttonStyle(.secondary)
-            } else {
-                Button("Connect Polar H10") { bluetooth.startScanning() }
-                    .buttonStyle(.primary)
+    private var runSetupCard: some View {
+        VStack(alignment: .leading, spacing: Spacing.large) {
+            Text("New run")
+                .font(.headline)
+                .foregroundStyle(ColorToken.primaryText)
+            
+            runTypePicker
+            zonePicker
+        }
+        .cardStyle()
+    }
+    
+    private var runTypePicker: some View {
+        VStack(alignment: .leading, spacing: Spacing.small) {
+            Text("Where")
+                .font(.subheadline)
+                .foregroundStyle(ColorToken.secondaryText)
+            
+            Picker("Run type", selection: $runViewModel.runType) {
+                ForEach(RunType.allCases, id: \.self) { type in
+                    Text(type.shortTitle)
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+    
+    private var zonePicker: some View {
+        VStack(alignment: .leading, spacing: Spacing.small) {
+            Text("Target zone")
+                .font(.subheadline)
+                .foregroundStyle(ColorToken.secondaryText)
+            
+            // Tag is zone id, same type as targetZoneId
+            Picker("Target zone", selection: $runViewModel.targetZoneId) {
+                ForEach(TrainingZone.zones) { zone in
+                    Text("\(zone.id)")
+                        .tag(zone.id)
+                }
+            }
+            .pickerStyle(.segmented)
+            
+            // Name and bpm range of selected zone
+            if let zone = runViewModel.targetZone {
+                HStack {
+                    ZoneBadge(zone: zone)
+                    
+                    Spacer()
+                    
+                    Text(zoneRangeText(zone))
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundStyle(ColorToken.secondaryText)
+                }
             }
         }
+    }
+    
+    /// e.g. "139–156 bpm", empty without profile
+    private func zoneRangeText(_ zone: TrainingZone) -> String {
+        guard let profile else { return "" }
+        
+        let lowest: Int = zone.calcMinHR(userMaxHR: profile.maxHeartRate)
+        let highest: Int = zone.calcMaxHR(userMaxHR: profile.maxHeartRate)
+        return "\(lowest)–\(highest) bpm"
+    }
+    
+    @ViewBuilder
+    private var bottomButtons: some View {
+        if bluetooth.isConnected {
+            VStack(spacing: Spacing.medium) {
+                if runViewModel.state == .idle {
+                    Button("Start run") { runViewModel.start() }
+                        .buttonStyle(.primary)
+                }
+                
+                Button("Disconnect") { bluetooth.disconnect() }
+                    .buttonStyle(.secondary)
+            }
+        } else if bluetooth.isScanning {
+            Button("Stop searching") { bluetooth.stopScanning() }
+                .buttonStyle(.secondary)
+        } else {
+            Button("Connect Polar H10") { bluetooth.startScanning() }
+                .buttonStyle(.primary)
+        }
+    }
 }
 
 /// Pill with colored dot showing Bluetooth status
