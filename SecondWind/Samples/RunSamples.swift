@@ -40,7 +40,7 @@ extension Run {
                 startDate: start,
                 duration: duration,
                 type: type,
-                // Easy pace of about 6:00 min/km
+                // Pace of about 6:00 min/km
                 distanceKm: duration / 360,
                 targetZoneId: zoneId,
                 timeInTargetZone: duration * inZone

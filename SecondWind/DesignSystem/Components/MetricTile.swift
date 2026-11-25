@@ -24,10 +24,15 @@ struct MetricTile: View {
                 Text(value)
                     .font(.metric)
                     .foregroundStyle(ColorToken.metricValue)
+                    // Never wrap a number, shrink it instead
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
                 
                 Text(unit)
                     .font(.body)
                     .foregroundStyle(ColorToken.metricUnit)
+                    // Unit keeps its size, number gets the remaining space
+                    .fixedSize()
             }
         }
         .cardStyle()
