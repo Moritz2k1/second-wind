@@ -54,25 +54,55 @@ class RunViewModel {
     /// Starts new run with selected type and zone
     func start() {
         guard state == .idle else { return }
+        
+        // Fresh values for new run
+        startDate = .now
+        accumulated = 0
+        elapsed = 0
+        activeSince = .now
+        
         state = .active
+        startTimer()
     }
     
     /// Pauses run
     func pause() {
         guard state == .active else { return }
+        
+        // Keep time run so far
+        updateElapsed()
+        accumulated = elapsed
+        activeSince = nil
+        
         state = .paused
+        stopTimer()
     }
     
     /// Continues paused run
     func resume() {
         guard state == .paused else { return }
+        
+        // New active part starts now
+        activeSince = .now
         state = .active
+        startTimer()
     }
     
     /// Finishes run
     func end() {
         guard state != .idle else { return }
+        
+        // Last update
+        updateElapsed()
+        activeSince = nil
+        
         state = .idle
+        stopTimer()
+    }
+    
+    static func clock(_ seconds: TimeInterval) -> String {
+        let pattern: Duration.TimeFormatStyle.Pattern = seconds >= 3600 ? .hourMinuteSecond : .minuteSecond
+        return Duration.seconds(seconds).formatted(.time(pattern: pattern))
     }
     
     /// Calls tick every second until stopped
