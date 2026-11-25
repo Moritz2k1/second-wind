@@ -19,4 +19,9 @@ extension Font {
     static let metric: Font = Font
         .system(size: 72, weight: .bold, design: .rounded)
         .monospacedDigit()
+    
+    // Numbers in small stat tiles
+    static let statValue: Font = Font
+        .system(.title2, design: .rounded, weight: .bold)
+        .monospacedDigit()
 }

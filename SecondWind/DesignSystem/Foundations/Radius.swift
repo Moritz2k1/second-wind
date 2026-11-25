@@ -11,4 +11,5 @@ import SwiftUI
 enum Radius {
     static let card: CGFloat = 16
     static let button: CGFloat = 14
+    static let chartBar: CGFloat = 4
 }

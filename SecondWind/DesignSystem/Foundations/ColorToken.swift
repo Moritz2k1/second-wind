@@ -63,7 +63,13 @@ extension Color {
     
     // Charts
     static let chartLine: Color = ColorPalette.cyan
+    static let chartBar: Color = ColorPalette.cyan
     static let chartValue: Color = ColorPalette.cyan
+    static let chartAxis: Color = ColorPalette.grey
+    static let chartGrid: Color = ColorPalette.white.opacity(0.08)
+    
+    // Progress bars
+    static let progressTrack: Color = ColorPalette.navy600.opacity(0.6)
     
     // Onboarding hero
     static let heroIcon: Color = ColorPalette.cyan
