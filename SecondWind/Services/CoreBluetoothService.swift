@@ -226,8 +226,8 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         // Name is sometimes only in advertisement data
         let advertisedName = advertisementData[CBAdvertisementDataLocalNameKey] as? String
         
-        // Guard constant for peripheral name
-        guard let peripheralName = peripheral.name else { return }
+        // Use advertised name if peripheral name is not known yet
+        guard let peripheralName = peripheral.name ?? advertisedName else { return }
         
         // Check if device name matches one of supported devices
         let isSupportedDevice = Configuration.supportedDevices.contains {

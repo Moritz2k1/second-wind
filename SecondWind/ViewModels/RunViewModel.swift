@@ -76,6 +76,11 @@ class RunViewModel {
         return min(timeInTargetZone / elapsed, 1)
     }
     
+    /// True while run screen should be shown
+    var isRunning: Bool {
+        state != .idle
+    }
+    
     /// Starts new run with selected type and zone
     func start() {
         guard state == .idle else { return }

@@ -83,6 +83,10 @@ extension Color {
     static let scanning: Color = ColorPalette.yellow
     static let disconnected: Color = ColorPalette.grey
     
+    // Zone status during run
+    static let zoneStatusInside: Color = ColorPalette.green
+    static let zoneStatusOutside: Color = ColorPalette.grey
+    
     // Zone colors
     static let zone1: Color = ColorPalette.blue
     static let zone2: Color = ColorPalette.green
