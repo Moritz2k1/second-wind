@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Small card with icon, label and number
 struct StatTile: View {
     
     let title: String
