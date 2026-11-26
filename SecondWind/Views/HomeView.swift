@@ -14,6 +14,9 @@ struct HomeView: View {
     // Shared profile - updates when changed in Profile tab
     @Environment(ProfileStore.self) private var profileStore
     
+    // Same setting as toggle in Profile
+    @AppStorage(Configuration.audioFeedbackKey) private var isFeedbackEnabled: Bool = true
+    
     private var profile: UserProfile? { profileStore.profile }
     
     // Owns Bluetooth connection while Home Screen exists
@@ -232,7 +235,11 @@ struct HomeView: View {
         if bluetooth.isConnected {
             VStack(spacing: Spacing.medium) {
                 if runViewModel.state == .idle {
-                    Button("Start run") { runViewModel.start(maxHeartRate: profileStore.maxHeartRate) }
+                    Button("Start run") {
+                        runViewModel.start(
+                        maxHeartRate: profileStore.maxHeartRate,
+                        isFeedbackEnabled: isFeedbackEnabled)
+                    }
                         .buttonStyle(.primary)
                 }
                 
