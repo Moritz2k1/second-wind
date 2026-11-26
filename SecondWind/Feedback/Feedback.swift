@@ -6,10 +6,9 @@
 //
 
 import AVFoundation
-import Combine
 
 // Evaluates heart rate against target zone and delivers audio feedback
-class Feedback: ObservableObject {
+class Feedback: NSObject {
     
     // Properties
     // Converts text to speech
@@ -17,6 +16,21 @@ class Feedback: ObservableObject {
     
     // Tracks when last feedback was given
     private var lastFeedback: Date = .distantPast
+    
+    override init() {
+        super.init()
+        
+        // When speaking is finished
+        synthesizer.delegate = self
+        
+        // Speak over music - music gets quieter meanwhile
+        let session: AVAudioSession = AVAudioSession.sharedInstance()
+        try? session.setCategory(
+            .playback,
+            mode: .voicePrompt,
+            options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
+        )
+    }
     
     /// Compares current heart rate against zone boundaries and triggers audio feedback
     func evaluate(currentHR: Int, zone: TrainingZone, userMaxHR: Int) -> Void {
@@ -40,13 +54,30 @@ class Feedback: ObservableObject {
         }
     }
     
-    // Speaks given message and updates cooldown timer
+    /// Stops current message
+    func stop() {
+        synthesizer.stopSpeaking(at: .immediate)
+    }
+    
+    /// Speaks given message and updates cooldown timer
     private func speak(message: String) -> Void {
+        
+        // Music gets quieter
+        try? AVAudioSession.sharedInstance().setActive(true)
+        
         let speech = AVSpeechUtterance(string: message)
         speech.voice = AVSpeechSynthesisVoice(language: "en-US")
         speech.rate = 0.45
         speech.volume = 1.0
         synthesizer.speak(speech)
         lastFeedback = Date()
+    }
+}
+
+extension Feedback: AVSpeechSynthesizerDelegate {
+    
+    /// Called when message has been spoken - music gets loud again
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 }
