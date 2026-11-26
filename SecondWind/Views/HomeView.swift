@@ -45,11 +45,23 @@ struct HomeView: View {
         .onChange(of: bluetooth.heartRate) { _, newValue in
             runViewModel.update(heartRate: newValue)
         }
+        // Run screen covers tabs while running
+        .fullScreenCover(isPresented: runScreenBinding) {
+            ActiveRunView(runViewModel: runViewModel)
+        }
     }
     
     // Setup only makes sense with strap connected and no run going on
     private var showsRunSetup: Bool {
         bluetooth.isConnected && runViewModel.state == .idle
+    }
+    
+    // Opens when run starts, closes when it ends
+    private var runScreenBinding: Binding<Bool> {
+        Binding(
+            get: { runViewModel.isRunning },
+            set: { _ in }
+        )
     }
     
     private var currentZone: TrainingZone? {

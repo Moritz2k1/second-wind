@@ -257,7 +257,7 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
     }
     
     /// Disconnect (reset values)
-        func centralManager(_ central: CBCentralManager, didDisconnectPeripheral: CBPeripheral, error: Error?) {
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral: CBPeripheral, error: Error?) {
         
         statusText = "Disconnected"
         isConnected = false
