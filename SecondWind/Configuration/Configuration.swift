@@ -44,4 +44,7 @@ struct Configuration {
     
     // Toggle audio feedback - name under which setting is stored
     static let audioFeedbackKey: String = "audioFeedbackEnabled"
+    
+    // Allowed values for own max heart rate (bpm)
+    static let customMaxHeartRateRange: ClosedRange<Int> = 120...230
 }
