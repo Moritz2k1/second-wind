@@ -25,16 +25,24 @@ struct RunStatistics {
     // All running time spent in target zone
     let timeInZoneRatio: Double
     
+    // Seconds per km over all runs with distance
+    let averagePaceSecondsPerKm: TimeInterval?
+    
     init(runs: [Run]) {
         var distance: Double = 0
         var duration: TimeInterval = 0
         var timeInZone: TimeInterval = 0
+        var durationWithDistance: TimeInterval = 0
         
         // Add up values of all runs
         for run in runs {
             distance += run.distanceKm
             duration += run.duration
             timeInZone += run.timeInTargetZone
+            
+            if run.distanceKm > 0 {
+                durationWithDistance += run.duration
+            }
         }
         
         runCount = runs.count
@@ -46,6 +54,13 @@ struct RunStatistics {
             timeInZoneRatio = min(timeInZone / duration, 1)
         } else {
             timeInZoneRatio = 0
+        }
+        
+        // Weighted like zone time
+        if distance > 0 {
+            averagePaceSecondsPerKm = durationWithDistance / distance
+        } else {
+            averagePaceSecondsPerKm = nil
         }
     }
     

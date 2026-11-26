@@ -84,4 +84,10 @@ final class Run {
         guard duration > 0 else { return 0 }
         return min(timeInTargetZone / duration, 1)
     }
+    
+    /// Average seconds per km
+    var paceSecondsPerKm: TimeInterval? {
+        guard distanceKm > 0 else { return nil }
+        return duration / distanceKm
+    }
 }

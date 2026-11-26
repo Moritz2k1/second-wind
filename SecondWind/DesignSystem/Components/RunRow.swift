@@ -52,6 +52,7 @@ struct RunRow: View {
         HStack(spacing: Spacing.large) {
             Label(RunFormat.duration(run.duration), systemImage: "clock")
             Label("~ \(RunFormat.distance(run.distanceKm)) km", systemImage: "map")
+            Label("\(RunFormat.pace(run.paceSecondsPerKm)) /km", systemImage: "speedometer")
         }
         .font(.subheadline.monospacedDigit())
         .foregroundStyle(ColorToken.primaryText)

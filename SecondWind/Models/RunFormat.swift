@@ -29,4 +29,10 @@ enum RunFormat {
     static func percent(_ ratio: Double) -> String {
         ratio.formatted(.percent.precision(.fractionLength(0)))
     }
+    
+    /// e.g. "6:10"
+    static func pace(_ secondsPerKm: TimeInterval?) -> String {
+        guard let secondsPerKm else { return "-- : --" }
+        return Duration.seconds(secondsPerKm).formatted(.time(pattern: .minuteSecond))
+    }
 }

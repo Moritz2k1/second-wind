@@ -94,6 +94,17 @@ struct HistoryView: View {
                     systemImage: "target"
                 )
             }
+            
+            GridRow {
+                StatTile(
+                    title: "Average pace",
+                    value: RunFormat.pace(statistics.averagePaceSecondsPerKm),
+                    unit: "/km",
+                    systemImage: "speedometer"
+                )
+                // Spans both columns
+                .gridCellColumns(2)
+            }
         }
     }
     
