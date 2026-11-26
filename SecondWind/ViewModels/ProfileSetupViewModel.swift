@@ -26,6 +26,10 @@ class ProfileSetupViewModel {
     
     var importedFromHealth: Bool = false
     
+    // Own max heart rate instead of estimate
+    var usesCustomMaxHeartRate: Bool = false
+    var customMaxHeartRate: Int = 185
+    
     // Empty form for first setup
     init() { }
     
@@ -33,6 +37,10 @@ class ProfileSetupViewModel {
     init(profile: UserProfile) {
         username = profile.username
         birthDate = profile.birthDate
+        usesCustomMaxHeartRate = profile.hasCustomMaxHeartRate
+        
+        // Starts at estimate -> switching on doesn't jump to random number
+        customMaxHeartRate = profile.customMaxHeartRate ?? profile.estimatedMaxHeartRate
     }
     
     // Check if username is valid (should not contain whitespaces)
@@ -48,8 +56,22 @@ class ProfileSetupViewModel {
         }
     }
     
-    // Used for live preview on profile setup screen
+    // Hint below max heart rate setting
+    var customMaxHeartRateInfo: String {
+        if usesCustomMaxHeartRate {
+            return "Estimate for your age would be \(estimatedMaxHeartRate) bpm."
+        } else {
+            return "Only switch on if you measured it, e.g. in a lab test or an all-out run."
+        }
+    }
+    
+    // Calculated from birthday
     var estimatedMaxHeartRate: Int {
+        createProfile().estimatedMaxHeartRate
+    }
+    
+    // Value zones will use after saving
+    var maxHeartRate: Int {
         createProfile().maxHeartRate
     }
     
@@ -66,6 +88,7 @@ class ProfileSetupViewModel {
         return UserProfile(
             username: trimName(username),
             birthDate: birthDate,
+            customMaxHeartRate: usesCustomMaxHeartRate ? customMaxHeartRate : nil
         )
     }
     

@@ -13,10 +13,17 @@ struct ProfileFormView: View {
     // Owned by screen that shows form
     @Bindable var viewModel: ProfileSetupViewModel
     
+    var showsCustomMaxHeartRate: Bool = false
+    
     var body: some View {
         VStack(spacing: Spacing.large) {
             nameSection
             birthDateSection
+            
+            if showsCustomMaxHeartRate {
+                customMaxHeartRateSection
+            }
+            
             maxHeartRateTile
         }
     }
@@ -43,13 +50,35 @@ struct ProfileFormView: View {
         }
     }
     
+    // Switch between estimate and own value
+    private var customMaxHeartRateSection: some View {
+        ProfileSection(title: "Max heart rate", footer: viewModel.customMaxHeartRateInfo) {
+            VStack(alignment: .leading, spacing: Spacing.medium) {
+                Toggle("I know my max heart rate", isOn: $viewModel.usesCustomMaxHeartRate)
+                    .tint(ColorToken.toggleTint)
+                    .foregroundStyle(ColorToken.inputText)
+                
+                // Plus and minus buttons, limited to realistic values
+                if viewModel.usesCustomMaxHeartRate {
+                    Stepper(value: $viewModel.customMaxHeartRate, in: Configuration.customMaxHeartRateRange) {
+                        Text("\(viewModel.customMaxHeartRate) bpm")
+                            .monospacedDigit()
+                            .foregroundStyle(ColorToken.inputText)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Shows value zones
     private var maxHeartRateTile: some View {
-        MetricTile(title: "Estimated max heart rate",
-                   value: "\(viewModel.estimatedMaxHeartRate)",
-                   unit: "bpm"
+        MetricTile(
+            title: viewModel.usesCustomMaxHeartRate ? "Your max heart rate" : "Estimated max heart rate",
+            value: "\(viewModel.maxHeartRate)",
+            unit: "bpm"
         )
         .contentTransition(.numericText())
-        .animation(.default, value: viewModel.estimatedMaxHeartRate)
+        .animation(.default, value: viewModel.maxHeartRate)
     }
 }
 /// Title above card

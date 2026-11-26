@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// Sheet for changing name and birthday
+/// Sheet for changing name, birthday and max heart rate
 struct EditProfileView: View {
     
     // Filled with current profile, changes only saved on Save
@@ -26,7 +26,7 @@ struct EditProfileView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                ProfileFormView(viewModel: viewModel)
+                ProfileFormView(viewModel: viewModel, showsCustomMaxHeartRate: true)
                     .padding(.horizontal, Spacing.large)
                     .padding(.vertical, Spacing.large)
             }
@@ -55,7 +55,18 @@ struct EditProfileView: View {
     }
 }
 
-#Preview {
+#Preview("Estimate") {
     EditProfileView(profile: .sample)
         .environment(ProfileStore(profile: .sample))
+}
+
+#Preview("Own max heart rate") {
+    let profile: UserProfile = UserProfile(
+        username: UserProfile.sample.username,
+        birthDate: UserProfile.sample.birthDate,
+        customMaxHeartRate: 194
+    )
+    
+    EditProfileView(profile: profile)
+        .environment(ProfileStore(profile: profile))
 }

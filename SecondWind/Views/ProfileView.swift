@@ -103,7 +103,7 @@ struct ProfileView: View {
                     .font(.headline)
                     .foregroundStyle(ColorToken.primaryText)
                 
-                Text("Based on your estimated max heart rate")
+                Text(profile.hasCustomMaxHeartRate ? "Based on your own max heart rate" : "Based on your estimated max heart rate")
                     .font(.subheadline)
                     .foregroundStyle(ColorToken.secondaryText)
             }
