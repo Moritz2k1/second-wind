@@ -14,6 +14,12 @@ enum RunFormat {
         Duration.seconds(seconds).formatted(.units(allowed: [.hours, .minutes], width: .narrow))
     }
     
+    /// e.g. "30 sec" or "2 min",
+    static func setting(_ seconds: TimeInterval) -> String {
+        guard seconds > 0 else { return "Off" }
+        return Duration.seconds(seconds).formatted(.units(allowed: [.minutes, .seconds], width: .abbreviated))
+    }
+    
     /// e.g. "12:34" or "1:02:05" for live timer
     static func clock(_ seconds: TimeInterval) -> String {
         let pattern: Duration.TimeFormatStyle.Pattern = seconds >= 3600 ? .hourMinuteSecond : .minuteSecond

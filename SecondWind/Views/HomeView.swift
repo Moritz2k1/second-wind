@@ -14,9 +14,6 @@ struct HomeView: View {
     // Shared profile - updates when changed in Profile tab
     @Environment(ProfileStore.self) private var profileStore
     
-    // Same setting as toggle in Profile
-    @AppStorage(Configuration.audioFeedbackKey) private var isFeedbackEnabled: Bool = true
-    
     private var profile: UserProfile? { profileStore.profile }
     
     // Shared connection, owned by MainTabView
@@ -241,8 +238,9 @@ struct HomeView: View {
                 if runViewModel.state == .idle {
                     Button("Start run") {
                         runViewModel.start(
-                        maxHeartRate: profileStore.maxHeartRate,
-                        isFeedbackEnabled: isFeedbackEnabled)
+                            maxHeartRate: profileStore.maxHeartRate,
+                            feedbackSettings: FeedbackSettings.load()
+                        )
                     }
                         .buttonStyle(.primary)
                 }

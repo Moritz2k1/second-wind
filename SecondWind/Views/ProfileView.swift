@@ -20,6 +20,11 @@ struct ProfileView: View {
     // Stored on device - on by default
     @AppStorage(Configuration.audioFeedbackKey) private var isFeedbackEnabled: Bool = true
     
+    // How often and how late feedback starts, defaults from Configuration
+    @AppStorage(Configuration.feedbackIntervalKey) private var feedbackInterval: TimeInterval = Configuration.feedbackInterval
+    
+    @AppStorage(Configuration.feedbackWarmupKey) private var feedbackWarmup: TimeInterval = Configuration.feedbackWarmup
+    
     // Shared connection, for strap status
     @EnvironmentObject private var bluetooth: CoreBluetoothService
     
@@ -128,6 +133,21 @@ struct ProfileView: View {
             Text("Says \"Faster\" or \"Slower\" when you leave your target zone")
                 .font(.subheadline)
                 .foregroundStyle(ColorToken.secondaryText)
+            
+            // Details only matter when feedback is on
+            if isFeedbackEnabled {
+                SettingRow(
+                    title: "Repeat at most every",
+                    selection: $feedbackInterval,
+                    options: Configuration.feedbackIntervalOptions
+                )
+                
+                SettingRow(
+                    title: "Quiet at start",
+                    selection: $feedbackWarmup,
+                    options: Configuration.feedbackWarmupOptions
+                )
+            }
         }
         .cardStyle()
     }
@@ -200,6 +220,34 @@ struct ProfileView: View {
     private func deleteAllRuns() {
         try? modelContext.delete(model: Run.self)
         try? modelContext.save()
+    }
+}
+
+/// Label on the left, menu with time choices on the right
+private struct SettingRow: View {
+    
+    let title: String
+    @Binding var selection: TimeInterval
+    let options: [TimeInterval]
+    
+    var body: some View {
+        HStack {
+            Text(title)
+                .font(.subheadline)
+                .foregroundStyle(ColorToken.primaryText)
+            
+            Spacer()
+            
+            // Shows selected value, tap opens list of options
+            Picker(title, selection: $selection) {
+                ForEach(options, id: \.self) { seconds in
+                    Text(RunFormat.setting(seconds))
+                }
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .tint(ColorToken.toggleTint)
+        }
     }
 }
 

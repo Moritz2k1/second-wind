@@ -77,7 +77,7 @@ class RunViewModel {
     // No feedback before this moment, set on start and resume
     private var feedbackQuietUntil: Date = .distantPast
     
-    // Set on start from user setting
+    // Set on start from user settings
     private var isFeedbackEnabled: Bool = true
     
     /// Zone matching selected id
@@ -142,13 +142,14 @@ class RunViewModel {
     }
     
     /// Starts new run with selected type and zone
-    func start(maxHeartRate: Int, isFeedbackEnabled: Bool) {
+    func start(maxHeartRate: Int, feedbackSettings: FeedbackSettings) {
         guard state == .idle else { return }
         
         // Fresh values for new run
         startDate = .now
         self.maxHeartRate = maxHeartRate
-        self.isFeedbackEnabled = isFeedbackEnabled
+        isFeedbackEnabled = feedbackSettings.isEnabled
+        feedback.interval = feedbackSettings.interval
         accumulated = 0
         elapsed = 0
         activeSince = .now
@@ -158,8 +159,8 @@ class RunViewModel {
         distanceMeters = 0
         recentPieces = []
         
-        // Warm up
-        feedbackQuietUntil = Date.now.addingTimeInterval(Configuration.feedbackWarmup)
+        // Warm up, length chosen in Profile
+        feedbackQuietUntil = Date.now.addingTimeInterval(feedbackSettings.warmup)
         
         // Pick tracker for run type, it reports every new piece of distance
         distanceTracker = makeTracker()
