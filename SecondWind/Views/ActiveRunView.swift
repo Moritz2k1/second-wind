@@ -26,6 +26,7 @@ struct ActiveRunView: View {
                 header
                 heartRateSection
                 statsRow
+                distanceRow
                 zoneProgress
             }
             .padding(.horizontal, Spacing.large)
@@ -96,6 +97,25 @@ struct ActiveRunView: View {
                 title: "In zone",
                 value: RunFormat.percent(runViewModel.timeInZoneRatio),
                 systemImage: "target"
+            )
+        }
+    }
+    
+    // Distance so far and pace of last seconds
+    private var distanceRow: some View {
+        HStack(spacing: Spacing.medium) {
+            StatTile(
+                title: "Distance",
+                value: "≈ \(RunFormat.distance(runViewModel.distanceKm))",
+                unit: "km",
+                systemImage: "map"
+            )
+            
+            StatTile(
+                title: "Pace",
+                value: RunFormat.pace(runViewModel.currentPaceSecondsPerKm),
+                unit: "/km",
+                systemImage: "speedometer"
             )
         }
     }
