@@ -38,6 +38,11 @@ extension Color {
     static let secondaryButtonText: Color = ColorPalette.cyan
     static let secondaryButtonBorder: Color = ColorPalette.cyan
     
+    // Delete Button
+    static let deleteButtonBackground: Color = ColorPalette.pink.opacity(0.12)
+    static let deleteButtonText: Color = ColorPalette.pink
+    static let deleteButtonBorder: Color = ColorPalette.pink
+    
     // Cards
     static let cardBackground: Color = ColorPalette.navy800
     static let cardBorder: Color = ColorPalette.white.opacity(0.08)

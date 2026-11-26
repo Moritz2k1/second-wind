@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 /// User details and personal training zones
 struct ProfileView: View {
@@ -22,6 +23,13 @@ struct ProfileView: View {
     // Shared connection, for strap status
     @EnvironmentObject private var bluetooth: CoreBluetoothService
     
+    // Saved runs, for count and deleting
+    @Query private var runs: [Run]
+    @Environment(\.modelContext) private var modelContext
+    
+    // Asks before deleting
+    @State private var showsDeleteConfirmation: Bool = false
+    
     var body: some View {
         ScrollView {
             VStack(spacing: Spacing.large) {
@@ -32,6 +40,7 @@ struct ProfileView: View {
                     zonesCard(profile)
                     feedbackCard
                     strapCard
+                    dataCard
                 }
             }
             .padding(.horizontal, Spacing.large)
@@ -43,6 +52,15 @@ struct ProfileView: View {
             if let profile = profileStore.profile {
                 EditProfileView(profile: profile)
             }
+        }
+        .confirmationDialog("Delete all runs?", isPresented: $showsDeleteConfirmation, titleVisibility: .visible) {
+            Button("Delete all runs", role: .destructive) {
+                deleteAllRuns()
+            }
+            
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("This can't be undone. Your profile and zones stay.")
         }
     }
     
@@ -129,6 +147,7 @@ struct ProfileView: View {
                     .font(.subheadline)
                     .foregroundStyle(ColorToken.secondaryText)
             }
+            
             ConnectionPill(
                 text: bluetooth.isConnected ? "Connected" : "Not connected",
                 isConnected: bluetooth.isConnected,
@@ -137,6 +156,31 @@ struct ProfileView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
+    }
+    
+    // Number of saved runs and option to delete them
+    private var dataCard: some View {
+        VStack(alignment: .leading, spacing: Spacing.medium) {
+            Label("Data", systemImage: "externaldrive")
+                .font(.headline)
+                .foregroundStyle(ColorToken.primaryText)
+            
+            Text("^[\(runs.count) run](inflect: true) saved on this device")
+                .font(.subheadline)
+                .foregroundStyle(ColorToken.secondaryText)
+            
+            Button("Delete all runs") { showsDeleteConfirmation = true }
+                .buttonStyle(.destructive)
+                .disabled(runs.isEmpty)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+    
+    /// Removes every saved run
+    private func deleteAllRuns() {
+        try? modelContext.delete(model: Run.self)
+        try? modelContext.save()
     }
 }
 
@@ -195,4 +239,5 @@ private struct ZoneRow: View {
     ProfileView()
         .environment(ProfileStore(profile: .sample))
         .environmentObject(CoreBluetoothService())
+        .modelContainer(.preview)
 }
