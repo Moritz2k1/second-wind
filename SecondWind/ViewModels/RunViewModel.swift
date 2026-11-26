@@ -74,6 +74,9 @@ class RunViewModel {
     // Speaks "Faster" or "Slower" when outside target zone
     private let feedback: Feedback = Feedback()
     
+    // No feedback before this moment, set on start and resume
+    private var feedbackQuietUntil: Date = .distantPast
+    
     /// Zone matching selected id
     var targetZone: TrainingZone? {
         for zone in TrainingZone.zones {
@@ -150,6 +153,9 @@ class RunViewModel {
         distanceMeters = 0
         recentPieces = []
         
+        // Warm up
+        feedbackQuietUntil = Date.now.addingTimeInterval(Configuration.feedbackWarmup)
+        
         // Pick tracker for run type, it reports every new piece of distance
         distanceTracker = makeTracker()
         distanceTracker?.onDistanceChange = { [weak self] meters in
@@ -189,6 +195,10 @@ class RunViewModel {
         // Starts fresh, distance during pause isn't counted
         distanceTracker?.start()
         
+        // Short grace period
+        let pauseEnd: Date = Date.now.addingTimeInterval(Configuration.feedbackResume)
+        feedbackQuietUntil = max(feedbackQuietUntil, pauseEnd)
+        
         state = .active
         startTimer()
     }
@@ -224,7 +234,7 @@ class RunViewModel {
         lastHeartRateDate = .now
         
         // Only during active run
-        if state == .active, let targetZone, maxHeartRate > 0 {
+        if state == .active, Date.now >= feedbackQuietUntil, let targetZone, maxHeartRate > 0 {
             feedback.evaluate(currentHR: heartRate, zone: targetZone, userMaxHR: maxHeartRate)
         }
     }

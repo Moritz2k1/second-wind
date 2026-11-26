@@ -35,4 +35,10 @@ struct Configuration {
     
     // Min pace distance for updates
     static let minimumPaceDistance: Double = 20
+    
+    // No feedback at start of run - 2 minutes to warm up
+    static let feedbackWarmup: TimeInterval = 120
+    
+    // No feedback right after resume - 30 seconds
+    static let feedbackResume: TimeInterval = 30
 }
