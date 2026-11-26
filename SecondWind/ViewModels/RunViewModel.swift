@@ -16,6 +16,12 @@ enum RunState {
     case paused
 }
 
+/// Distance reported by tracker
+private struct DistancePiece {
+    let date: Date
+    let meters: Double
+}
+
 @Observable
 class RunViewModel {
     
@@ -56,6 +62,15 @@ class RunViewModel {
     // Needed for zone boundaries in bpm
     private let maxHeartRate: Int = UserProfile.loadProfile()?.maxHeartRate ?? 0
     
+    // Meters run so far, without pauses
+    private(set) var distanceMeters: Double = 0
+    
+    // Pieces of last seconds for current pace
+    private var recentPieces: [DistancePiece] = []
+    
+    // GPS or pedometer - chosen at start
+    private var distanceTracker: DistanceTracker? = nil
+    
     /// Zone matching selected id
     var targetZone: TrainingZone? {
         for zone in TrainingZone.zones {
@@ -84,6 +99,39 @@ class RunViewModel {
         state != .idle
     }
     
+    /// Distance in km - for screen and saving
+    var distanceKm: Double {
+        distanceMeters / 1000
+    }
+    
+    /// Seconds per km since start
+    var averagePaceSecondsPerKm: TimeInterval? {
+        guard distanceMeters >= Configuration.minimumPaceDistance else { return nil }
+        return elapsed / distanceKm
+    }
+    
+    /// Seconds per km over last seconds
+    var currentPaceSecondsPerKm: TimeInterval? {
+        guard let activeSince else { return nil }
+        
+        // Only pieces inside window count
+        let windowStart: Date = Date.now.addingTimeInterval(-Configuration.paceWindow)
+        var meters: Double = 0
+        
+        for piece in recentPieces {
+            if piece.date >= windowStart {
+                meters += piece.meters
+            }
+        }
+        
+        guard meters >= Configuration.minimumPaceDistance else { return nil }
+        
+        // Shorter window right after start or resume
+        let seconds: TimeInterval = min(Configuration.paceWindow, Date.now.timeIntervalSince(activeSince))
+        
+        return seconds / (meters / 1000)
+    }
+    
     /// Starts new run with selected type and zone
     func start() {
         guard state == .idle else { return }
@@ -96,6 +144,15 @@ class RunViewModel {
         timeInTargetZone = 0
         lastZoneCheck = .now
         lastHeartRateDate = nil
+        distanceMeters = 0
+        recentPieces = []
+        
+        // Pick tracker for run type, it reports every new piece of distance
+        distanceTracker = makeTracker()
+        distanceTracker?.onDistanceChange = { [weak self] meters in
+            self?.addDistance(meters)
+        }
+        distanceTracker?.start()
         
         state = .active
         startTimer()
@@ -111,6 +168,8 @@ class RunViewModel {
         accumulated = elapsed
         activeSince = nil
         lastZoneCheck = nil
+        distanceTracker?.stop()
+        recentPieces = []
         
         state = .paused
         stopTimer()
@@ -123,6 +182,10 @@ class RunViewModel {
         // New active part starts now
         activeSince = .now
         lastZoneCheck = .now
+        
+        // Starts fresh, distance during pause isn't counted
+        distanceTracker?.start()
+        
         state = .active
         startTimer()
     }
@@ -136,6 +199,8 @@ class RunViewModel {
         updateZoneTime()
         lastZoneCheck = nil
         activeSince = nil
+        distanceTracker?.stop()
+        distanceTracker = nil
         
         state = .idle
         stopTimer()
@@ -218,9 +283,43 @@ class RunViewModel {
             startDate: startDate,
             duration: elapsed,
             type: runType,
-            distanceKm: 0,
+            distanceKm: distanceKm,
             targetZoneId: targetZoneId,
             timeInTargetZone: timeInTargetZone
         )
+    }
+    
+    /// Called by tracker with meters moved since last call
+    private func addDistance(_ meters: Double) {
+        // Pieces arriving during pause don't count
+        guard state == .active else { return }
+        
+        distanceMeters += meters
+        recentPieces.append(DistancePiece(date: .now, meters: meters))
+        removeOldPieces()
+    }
+    
+    /// Only pieces inside pace window
+    private func removeOldPieces() {
+        let windowStart: Date = Date.now.addingTimeInterval(-Configuration.paceWindow)
+        var kept: [DistancePiece] = []
+        
+        for piece in recentPieces {
+            if piece.date >= windowStart {
+                kept.append(piece)
+            }
+        }
+        
+        recentPieces = kept
+    }
+    
+    /// GPS outside, step counter on treadmill
+    private func makeTracker() -> DistanceTracker {
+        switch runType {
+        case .outdoor:
+            return GPSDistanceTracker()
+        case .indoor:
+            return PedometerDistanceTracker()
+        }
     }
 }

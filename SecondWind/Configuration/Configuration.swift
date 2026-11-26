@@ -29,4 +29,10 @@ struct Configuration {
     
     // Faster jumps = GPS errors
     static let maxRunningSpeed: Double = 10
+    
+    // Current pace updates
+    static let paceWindow: TimeInterval = 30
+    
+    // Min pace distance for updates
+    static let minimumPaceDistance: Double = 20
 }
