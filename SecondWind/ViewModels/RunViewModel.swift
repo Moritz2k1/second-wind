@@ -77,6 +77,9 @@ class RunViewModel {
     // No feedback before this moment, set on start and resume
     private var feedbackQuietUntil: Date = .distantPast
     
+    // Set on start from user setting
+    private var isFeedbackEnabled: Bool = true
+    
     /// Zone matching selected id
     var targetZone: TrainingZone? {
         for zone in TrainingZone.zones {
@@ -139,12 +142,13 @@ class RunViewModel {
     }
     
     /// Starts new run with selected type and zone
-    func start(maxHeartRate: Int) {
+    func start(maxHeartRate: Int, isFeedbackEnabled: Bool) {
         guard state == .idle else { return }
         
         // Fresh values for new run
         startDate = .now
         self.maxHeartRate = maxHeartRate
+        self.isFeedbackEnabled = isFeedbackEnabled
         accumulated = 0
         elapsed = 0
         activeSince = .now
@@ -235,7 +239,7 @@ class RunViewModel {
         lastHeartRateDate = .now
         
         // Only during active run
-        if state == .active, Date.now >= feedbackQuietUntil, let targetZone, maxHeartRate > 0 {
+        if isFeedbackEnabled, state == .active, Date.now >= feedbackQuietUntil, let targetZone, maxHeartRate > 0 {
             feedback.evaluate(currentHR: heartRate, zone: targetZone, userMaxHR: maxHeartRate)
         }
     }

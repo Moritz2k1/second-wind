@@ -41,4 +41,7 @@ struct Configuration {
     
     // No feedback right after resume - 30 seconds
     static let feedbackResume: TimeInterval = 30
+    
+    // Toggle audio feedback - name under which setting is stored
+    static let audioFeedbackKey: String = "audioFeedbackEnabled"
 }

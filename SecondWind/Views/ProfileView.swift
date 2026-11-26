@@ -16,6 +16,9 @@ struct ProfileView: View {
     // Opens edit sheet
     @State private var showsEditSheet: Bool = false
     
+    // Stored on device - on by default
+    @AppStorage(Configuration.audioFeedbackKey) private var isFeedbackEnabled: Bool = true
+    
     var body: some View {
         ScrollView {
             VStack(spacing: Spacing.large) {
@@ -24,6 +27,7 @@ struct ProfileView: View {
                 if let profile = profileStore.profile {
                     profileCard(profile)
                     zonesCard(profile)
+                    feedbackCard
                 }
             }
             .padding(.horizontal, Spacing.large)
@@ -84,6 +88,22 @@ struct ProfileView: View {
             ForEach(TrainingZone.zones) { zone in
                 ZoneRow(zone: zone, maxHeartRate: profile.maxHeartRate)
             }
+        }
+        .cardStyle()
+    }
+    
+    // Turns audio feedback on or off
+    private var feedbackCard: some View {
+        VStack(alignment: .leading, spacing: Spacing.small) {
+            Toggle(isOn: $isFeedbackEnabled) {
+                Label("Audio feedback", systemImage: "speaker.wave.2.fill")
+                    .font(.headline)
+                    .foregroundStyle(ColorToken.primaryText)
+            }
+            
+            Text("Says \"Faster\" or \"Slower\" when you leave your target zone")
+                .font(.subheadline)
+                .foregroundStyle(ColorToken.secondaryText)
         }
         .cardStyle()
     }
