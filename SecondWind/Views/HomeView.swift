@@ -19,8 +19,8 @@ struct HomeView: View {
     
     private var profile: UserProfile? { profileStore.profile }
     
-    // Owns Bluetooth connection while Home Screen exists
-    @StateObject private var bluetooth: CoreBluetoothService = CoreBluetoothService()
+    // Shared connection, owned by MainTabView
+    @EnvironmentObject private var bluetooth: CoreBluetoothService
     
     // Setup and state of next or current run
     @State private var runViewModel: RunViewModel = RunViewModel()
@@ -280,5 +280,7 @@ private struct ConnectionPill: View {
 }
 
 #Preview {
-    HomeView().environment(ProfileStore())
+    HomeView()
+        .environment(ProfileStore())
+        .environmentObject(CoreBluetoothService())
 }

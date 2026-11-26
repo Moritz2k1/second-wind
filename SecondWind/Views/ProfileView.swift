@@ -100,6 +100,7 @@ struct ProfileView: View {
                     .font(.headline)
                     .foregroundStyle(ColorToken.primaryText)
             }
+            .tint(ColorToken.toggleTint)
             
             Text("Says \"Faster\" or \"Slower\" when you leave your target zone")
                 .font(.subheadline)
@@ -163,4 +164,5 @@ private struct ZoneRow: View {
 #Preview {
     ProfileView()
         .environment(ProfileStore(profile: .sample))
+        .environmentObject(CoreBluetoothService())
 }

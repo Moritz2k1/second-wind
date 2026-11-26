@@ -30,6 +30,9 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
     @Published private(set) var statusText: String = "Ready"
     @Published private(set) var isConnected: Bool = false
     @Published private(set) var isScanning: Bool = false
+
+    // Name of found strap
+    @Published private(set) var deviceName: String? = nil
     
     var onHeartRate: ((Int) -> Void)? = nil
     
@@ -243,7 +246,7 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         guard isSupportedDevice else { return }
         
         self.peripheral = peripheral
-        statusText = "Device found: \(peripheralName)"
+        statusText = "Device found: \(deviceName = peripheralName)"
         stopScanning()
         
         // Direct connection

@@ -10,6 +10,10 @@ import SwiftData
 
 // Main navigation - tab bar at the bottom
 struct MainTabView: View {
+    
+    // Shared by Home and Profile
+    @StateObject private var bluetooth: CoreBluetoothService = CoreBluetoothService()
+    
     var body: some View {
         TabView {
             Tab("Home", systemImage: "figure.run") {
@@ -25,6 +29,7 @@ struct MainTabView: View {
             }
         }
         .tint(ColorToken.accent)
+        .environmentObject(bluetooth)
     }
 }
 
