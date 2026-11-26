@@ -68,5 +68,65 @@ struct ActiveRunView: View {
         }
     }
     
+    private var heartRateText: String {
+        runViewModel.heartRate > 0 ? "\(runViewModel.heartRate)" : "--"
+    }
     
+    // Shows at a glance if user is in target zone
+    private var zoneStatus: some View {
+        let isInZone: Bool = runViewModel.isInTargetZone
+        
+        return Label(
+            isInZone ? "In target zone" : "Outside target zone",
+            systemImage: isInZone ? "checkmark.circle.fill" : "exclamationmark.circle"
+        )
+        .font(.subheadline)
+        .foregroundStyle(isInZone ? ColorToken.zoneStatusInside : ColorToken.zoneStatusOutside)
+    }
+    
+    private var statsRow: some View {
+        HStack(spacing: Spacing.medium) {
+            StatTile(
+                title: "Time",
+                value: RunFormat.clock(runViewModel.elapsed),
+                systemImage: "clock"
+            )
+            
+            StatTile(
+                title: "In zone",
+                value: RunFormat.percent(runViewModel.timeInZoneRatio),
+                systemImage: "target"
+            )
+        }
+    }
+    
+    private var controls: some View {
+        VStack(spacing: Spacing.medium) {
+            if runViewModel.state == .paused {
+                Button("Resume") { runViewModel.resume() }
+                    .buttonStyle(.primary)
+            } else {
+                Button("Pause") { runViewModel.pause() }
+                    .buttonStyle(.primary)
+            }
+            
+            Button("End run") { showsEndConfirmation = true }
+                .buttonStyle(.secondary)
+        }
+    }
+    
+    @ViewBuilder
+    private var zoneProgress: some View {
+        if let zone = runViewModel.targetZone {
+            ZoneProgressBar(
+                value: runViewModel.timeInZoneRatio,
+                color: Color.zoneColor(zoneId: zone.id)
+            )
+        }
+    }
+}
+
+#Preview {
+    ActiveRunView(runViewModel: RunViewModel())
+        .modelContainer(for: Run.self, inMemory: true)
 }
