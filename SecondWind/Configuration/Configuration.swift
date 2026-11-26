@@ -20,4 +20,13 @@ struct Configuration {
     
     // No new heart rate for given duration
     static let heartRateTimeout: TimeInterval = 5
+    
+    // Ignored if less than
+    static let gpsMaxAccuracy: Double = 20
+    
+    // Smaller steps = GPS noise
+    static let gpsMinStep: Double = 3
+    
+    // Faster jumps = GPS errors
+    static let maxRunningSpeed: Double = 10
 }
