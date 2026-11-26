@@ -96,7 +96,11 @@ struct HomeView: View {
             title: "Hey, \(profile?.username ?? "Runner")",
             alignment: .leading
         ) {
-            ConnectionPill(text: bluetooth.statusText, color: connectionColor)
+            ConnectionPill(
+                text: bluetooth.statusText,
+                isConnected: bluetooth.isConnected,
+                isScanning: bluetooth.isScanning
+            )
         }
     }
     
@@ -253,29 +257,6 @@ struct HomeView: View {
             Button("Connect Polar H10") { bluetooth.startScanning() }
                 .buttonStyle(.primary)
         }
-    }
-}
-
-/// Pill with colored dot showing Bluetooth status
-private struct ConnectionPill: View {
-    
-    let text: String
-    let color: Color
-    
-    var body: some View {
-        HStack(spacing: Spacing.small) {
-            Circle()
-                .fill(color)
-                .frame(width: 8, height: 8)
-            
-            Text(text)
-                .font(.subheadline)
-                .foregroundStyle(ColorToken.pillText)
-        }
-        .padding(.horizontal, Spacing.medium)
-        .padding(.vertical, Spacing.small)
-        .background(ColorToken.pillBackground)
-        .clipShape(Capsule())
     }
 }
 

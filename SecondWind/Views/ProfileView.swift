@@ -19,6 +19,9 @@ struct ProfileView: View {
     // Stored on device - on by default
     @AppStorage(Configuration.audioFeedbackKey) private var isFeedbackEnabled: Bool = true
     
+    // Shared connection, for strap status
+    @EnvironmentObject private var bluetooth: CoreBluetoothService
+    
     var body: some View {
         ScrollView {
             VStack(spacing: Spacing.large) {
@@ -28,6 +31,7 @@ struct ProfileView: View {
                     profileCard(profile)
                     zonesCard(profile)
                     feedbackCard
+                    strapCard
                 }
             }
             .padding(.horizontal, Spacing.large)
@@ -106,6 +110,32 @@ struct ProfileView: View {
                 .font(.subheadline)
                 .foregroundStyle(ColorToken.secondaryText)
         }
+        .cardStyle()
+    }
+    
+    // Which strap is used + connection status
+    private var strapCard: some View {
+        VStack(alignment: .leading, spacing: Spacing.medium) {
+            Label("Chest strap", systemImage: "heart.circle")
+                .font(.headline)
+                .foregroundStyle(ColorToken.primaryText)
+            
+            VStack(alignment: .leading, spacing: Spacing.small / 2) {
+                Text(bluetooth.deviceName ?? "No strap connected yet")
+                    .font(.body)
+                    .foregroundStyle(ColorToken.primaryText)
+                
+                Text("Works with Polar H10, connect on Home")
+                    .font(.subheadline)
+                    .foregroundStyle(ColorToken.secondaryText)
+            }
+            ConnectionPill(
+                text: bluetooth.isConnected ? "Connected" : "Not connected",
+                isConnected: bluetooth.isConnected,
+                isScanning: bluetooth.isScanning
+            )
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
     }
 }
