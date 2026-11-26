@@ -17,6 +17,9 @@ class Feedback: NSObject {
     // Tracks when last feedback was given
     private var lastFeedback: Date = .distantPast
     
+    // Minimum time between two messages, set by run from user setting
+    var interval: TimeInterval = Configuration.feedbackInterval
+    
     override init() {
         super.init()
         
@@ -43,7 +46,7 @@ class Feedback: NSObject {
         guard currentHR > 0 else { return }
         
         // Enforce cooldown to avoid repeated feedback
-        guard Date().timeIntervalSince(lastFeedback) >= Configuration.feedbackInterval else { return }
+        guard Date().timeIntervalSince(lastFeedback) >= interval else { return }
         
         // Trigger audio feedback if not in selected zone
         if currentHR < zoneMin {

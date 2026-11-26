@@ -45,6 +45,14 @@ struct Configuration {
     // Toggle audio feedback - name under which setting is stored
     static let audioFeedbackKey: String = "audioFeedbackEnabled"
     
+    // Set custom feedback and warmup interval
+    static let feedbackIntervalKey: String = "feedbackInterval"
+    static let feedbackWarmupKey: String = "feedbackWarmup"
+    
+    // Choices in Profile
+    static let feedbackIntervalOptions: [TimeInterval] = [30, 60, 120]
+    static let feedbackWarmupOptions: [TimeInterval] = [30, 60, 120]
+    
     // Allowed values for own max heart rate (bpm)
     static let customMaxHeartRateRange: ClosedRange<Int> = 120...230
 }
