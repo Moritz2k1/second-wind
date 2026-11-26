@@ -71,6 +71,9 @@ class RunViewModel {
     // GPS or pedometer - chosen at start
     private var distanceTracker: DistanceTracker? = nil
     
+    // Speaks "Faster" or "Slower" when outside target zone
+    private let feedback: Feedback = Feedback()
+    
     /// Zone matching selected id
     var targetZone: TrainingZone? {
         for zone in TrainingZone.zones {
@@ -170,7 +173,7 @@ class RunViewModel {
         lastZoneCheck = nil
         distanceTracker?.stop()
         recentPieces = []
-        
+        feedback.stop()
         state = .paused
         stopTimer()
     }
@@ -201,7 +204,7 @@ class RunViewModel {
         activeSince = nil
         distanceTracker?.stop()
         distanceTracker = nil
-        
+        feedback.stop()
         state = .idle
         stopTimer()
         
@@ -219,6 +222,11 @@ class RunViewModel {
         
         self.heartRate = heartRate
         lastHeartRateDate = .now
+        
+        // Only during active run
+        if state == .active, let targetZone, maxHeartRate > 0 {
+            feedback.evaluate(currentHR: heartRate, zone: targetZone, userMaxHR: maxHeartRate)
+        }
     }
     
     /// Calls tick every second until stopped
