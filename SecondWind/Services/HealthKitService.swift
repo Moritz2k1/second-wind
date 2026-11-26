@@ -31,6 +31,9 @@ class HealthKitService {
             // Read date of birth
             let components: DateComponents = try healthStore.dateOfBirthComponents()
             
+            // Empty if user denied access or never entered a birthday
+            guard components.year != nil else { return nil }
+            
             // Turn components (year, month, day) into a date
             let dateOfBirth: Date? = Calendar.current.date(from: components)
             return dateOfBirth

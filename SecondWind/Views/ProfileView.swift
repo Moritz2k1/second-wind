@@ -218,7 +218,11 @@ struct ProfileView: View {
     
     /// Removes every saved run
     private func deleteAllRuns() {
-        try? modelContext.delete(model: Run.self)
+        
+        for run in runs {
+            modelContext.delete(run)
+        }
+        
         try? modelContext.save()
     }
 }

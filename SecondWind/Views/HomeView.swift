@@ -82,12 +82,6 @@ struct HomeView: View {
         return "\(Int(latest)) ms"
     }
     
-    private var connectionColor: Color {
-        if bluetooth.isScanning { return ColorToken.scanning }
-        if bluetooth.isConnected { return ColorToken.connected }
-        return ColorToken.disconnected
-    }
-    
     private var header: some View {
         ScreenHeader(
             title: "Hey, \(profile?.username ?? "Runner")",
