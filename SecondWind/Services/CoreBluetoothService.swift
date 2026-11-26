@@ -19,6 +19,9 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
     private var peripheral: CBPeripheral?
     private let rrHistoryLimit: Int = 40
     
+    // True after Disconnect button, then no automatic reconnect
+    private var isUserDisconnect: Bool = false
+    
     /*
      Observables in the UI
      (private(set) = other parts of app can read but not modify the value)
@@ -82,7 +85,17 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
         stopScanning()
         
         guard let peripheral else { return }
+        isUserDisconnect = true
         centralManager.cancelPeripheralConnection(peripheral)
+    }
+    
+    /// Back to not connected after disconnect or Bluetooth turned off
+    private func resetConnectionValues() {
+        isConnected = false
+        isScanning = false
+        heartRate = 0
+        rrIntervals = []
+        rrHistory = []
     }
     
     /// Calculate RR-Intervals
@@ -225,6 +238,11 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         default:
             statusText = "Bluetooth not available"
         }
+        
+        // Connection is gone without didDisconnect being called
+        if central.state != .poweredOn {
+            resetConnectionValues()
+        }
     }
     
     /// Called when device has been found
@@ -246,7 +264,8 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         guard isSupportedDevice else { return }
         
         self.peripheral = peripheral
-        statusText = "Device found: \(deviceName = peripheralName)"
+        deviceName = peripheralName
+        statusText = "Device found: \(peripheralName)"
         stopScanning()
         
         // Direct connection
@@ -258,20 +277,33 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         
         statusText = "Connected"
         isConnected = true
+        isUserDisconnect = false
         peripheral.delegate = self
         
         // Search for HR Services
         peripheral.discoverServices([HEART_RATE_SERVICE])
     }
     
-    /// Disconnect (reset values)
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral: CBPeripheral, error: Error?) {
+    /// Connection ended, reconnects automatically if strap was lost
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        resetConnectionValues()
         
-        statusText = "Disconnected"
-        isConnected = false
-        heartRate = 0
-        rrIntervals = []
-        rrHistory = []
+        // User pressed Disconnect, stay disconnected
+        if isUserDisconnect {
+            isUserDisconnect = false
+            statusText = "Disconnected"
+            return
+        }
+        
+        // Lost by accident - iOS connects again once strap is back
+        statusText = "Reconnecting..."
+        centralManager.connect(peripheral)
+    }
+    
+    /// Connection attempt didn't work
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        statusText = "Could not connect"
+        resetConnectionValues()
     }
 }
 
