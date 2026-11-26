@@ -41,6 +41,7 @@ struct ProfileView: View {
                     feedbackCard
                     strapCard
                     dataCard
+                    aboutCard
                 }
             }
             .padding(.horizontal, Spacing.large)
@@ -177,10 +178,48 @@ struct ProfileView: View {
         .cardStyle()
     }
     
+    // App version
+    private var aboutCard: some View {
+        VStack(alignment: .leading, spacing: Spacing.medium) {
+            Label("About", systemImage: "info.circle")
+                .font(.headline)
+                .foregroundStyle(ColorToken.primaryText)
+            
+            InfoRow(title: "Version", value: AppInfo.fullVersion)
+            InfoRow(title: "Max heart rate formula", value: "Tanaka (2001)")
+            
+            Text("Second Wind is not a medical device. Zones are estimates.")
+                .font(.footnote)
+                .foregroundStyle(ColorToken.secondaryText)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+    
     /// Removes every saved run
     private func deleteAllRuns() {
         try? modelContext.delete(model: Run.self)
         try? modelContext.save()
+    }
+}
+
+/// Label on the left, value on the right
+private struct InfoRow: View {
+    
+    let title: String
+    let value: String
+    
+    var body: some View {
+        HStack {
+            Text(title)
+                .foregroundStyle(ColorToken.secondaryText)
+            
+            Spacer()
+            
+            Text(value)
+                .foregroundStyle(ColorToken.primaryText)
+        }
+        .font(.subheadline)
     }
 }
 
