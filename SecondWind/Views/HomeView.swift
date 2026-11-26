@@ -224,10 +224,7 @@ struct HomeView: View {
     /// e.g. "139–156 bpm", empty without profile
     private func zoneRangeText(_ zone: TrainingZone) -> String {
         guard let profile else { return "" }
-        
-        let lowest: Int = zone.calcMinHR(userMaxHR: profile.maxHeartRate)
-        let highest: Int = zone.calcMaxHR(userMaxHR: profile.maxHeartRate)
-        return "\(lowest)–\(highest) bpm"
+        return RunFormat.heartRateRange(of: zone, maxHeartRate: profile.maxHeartRate)
     }
     
     @ViewBuilder

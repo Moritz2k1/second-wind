@@ -21,7 +21,7 @@ struct MainTabView: View {
             }
             
             Tab("Profile", systemImage: "person.crop.circle") {
-                ComingSoonView(title: "Profile", systemImage: "person.crop.circle")
+                ProfileView()
             }
         }
         .tint(ColorToken.accent)
