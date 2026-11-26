@@ -13,7 +13,12 @@ import Observation
 class ProfileStore {
     
     // nil until profile setup is finished
-    private(set) var profile: UserProfile? = UserProfile.loadProfile()
+    private(set) var profile: UserProfile?
+    
+    // Loads saved profile, previews can pass a sample instead
+    init(profile: UserProfile? = UserProfile.loadProfile()) {
+        self.profile = profile
+    }
     
     /// Needed for zone boundaries
     var maxHeartRate: Int {

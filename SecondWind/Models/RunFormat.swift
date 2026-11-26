@@ -35,4 +35,11 @@ enum RunFormat {
         guard let secondsPerKm else { return "-- : --" }
         return Duration.seconds(secondsPerKm).formatted(.time(pattern: .minuteSecond))
     }
+    
+    /// e.g. "139–156 bpm" for zone and user's max heart rate
+    static func heartRateRange(of zone: TrainingZone, maxHeartRate: Int) -> String {
+        let lowest: Int = zone.calcMinHR(userMaxHR: maxHeartRate)
+        let highest: Int = zone.calcMaxHR(userMaxHR: maxHeartRate)
+        return "\(lowest)–\(highest) bpm"
+    }
 }

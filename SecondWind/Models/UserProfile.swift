@@ -41,6 +41,20 @@ struct UserProfile {
          Int((208 - 0.7 * Double(age)).rounded())
      }
     
+    /// First letters of first and last name
+    var initials: String {
+        let words = username.split(separator: " ")
+        var result: String = ""
+        
+        for word in words.prefix(2) {
+            if let first = word.first {
+                result.append(first)
+            }
+        }
+        
+        return result.uppercased()
+    }
+    
     /// Writes profile to device
     func saveProfile() {
         let defaults: UserDefaults = UserDefaults.standard
