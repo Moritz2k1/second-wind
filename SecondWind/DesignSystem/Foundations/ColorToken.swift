@@ -82,6 +82,9 @@ extension Color {
     static let heroGlowInner: Color = ColorPalette.cyan.opacity(0.12)
     static let heroGlowOuter: Color = ColorPalette.cyan.opacity(0.06)
     
+    // Toggles
+    static let toggleTint: Color = ColorPalette.cyan
+    
     // Connection colors
     static let connected: Color = ColorPalette.green
     static let scanning: Color = ColorPalette.yellow
