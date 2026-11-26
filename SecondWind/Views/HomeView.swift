@@ -41,10 +41,12 @@ struct HomeView: View {
                 .padding(Spacing.large)
         }
         .screenBackground()
-        // Pass every new value from strap to run
-        .onChange(of: bluetooth.heartRate) { _, newValue in
-            runViewModel.update(heartRate: newValue)
+        .onAppear {
+            bluetooth.onHeartRate = { heartRate in
+                runViewModel.update(heartRate: heartRate)
+            }
         }
+        
         // Run screen covers tabs while running
         .fullScreenCover(isPresented: runScreenBinding) {
             ActiveRunView(runViewModel: runViewModel)

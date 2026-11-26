@@ -17,4 +17,7 @@ struct Configuration {
     
     // Shorter runs are not saved
     static let minimumRunDuration: TimeInterval = 60
+    
+    // No new heart rate for given duration
+    static let heartRateTimeout: TimeInterval = 5
 }

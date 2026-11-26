@@ -31,6 +31,8 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
     @Published private(set) var isConnected: Bool = false
     @Published private(set) var isScanning: Bool = false
     
+    var onHeartRate: ((Int) -> Void)? = nil
+    
     // Publisher Conformance -> Must be used because of protocol ($ accesses publisher)
     var heartRatePublisher: AnyPublisher<Int, Never> {
         $heartRate.eraseToAnyPublisher()
@@ -124,6 +126,9 @@ class CoreBluetoothService: NSObject, ObservableObject, HeartRateService {
         
         // Update current hr -> published to subscribers
         heartRate = hrVal
+        
+        // Pass value on directly
+        onHeartRate?(hrVal)
         
         // Bit 4 determines whether RR-interval data is included
         let hasRRIntervals = (flags & 0x10) != 0

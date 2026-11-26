@@ -17,6 +17,7 @@ protocol HeartRateService: AnyObject {
     var isConnected: Bool { get }
     var statusText: String { get }
     var isScanning: Bool { get }
+    var onHeartRate: ((Int) -> Void)? { get set }
     
     // Publishers allow other parts of the app to observe changes
     var heartRatePublisher: AnyPublisher<Int, Never> { get }
