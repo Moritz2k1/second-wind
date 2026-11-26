@@ -38,7 +38,7 @@ struct ProfileView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: Spacing.large) {
-                ScreenHeader(title: "Profile", alignment: .leading)
+                ScreenHeader(title: "Profile")
                 
                 if let profile = profileStore.profile {
                     profileCard(profile)

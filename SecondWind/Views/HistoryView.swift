@@ -36,7 +36,7 @@ struct HistoryView: View {
         
         return ScrollView {
             VStack(spacing: Spacing.large) {
-                ScreenHeader(title: "History", alignment: .leading)
+                ScreenHeader(title: "History")
                 filterPicker
                 statisticsGrid(viewModel.statistics(for: filteredRuns))
                 weeklyChart(viewModel.weeklyDistance(for: filteredRuns))

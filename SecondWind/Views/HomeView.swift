@@ -84,8 +84,7 @@ struct HomeView: View {
     
     private var header: some View {
         ScreenHeader(
-            title: "Hey, \(profile?.username ?? "Runner")",
-            alignment: .leading
+            title: "Hey, \(profile?.username ?? "Runner")"
         ) {
             ConnectionPill(
                 text: bluetooth.statusText,
