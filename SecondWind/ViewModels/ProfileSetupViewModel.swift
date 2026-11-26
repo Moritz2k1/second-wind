@@ -26,6 +26,15 @@ class ProfileSetupViewModel {
     
     var importedFromHealth: Bool = false
     
+    // Empty form for first setup
+    init() { }
+    
+    // Fills in existing values, used when editing
+    init(profile: UserProfile) {
+        username = profile.username
+        birthDate = profile.birthDate
+    }
+    
     // Check if username is valid (should not contain whitespaces)
     var isValid: Bool {
         !trimName(username).isEmpty

@@ -13,6 +13,9 @@ struct ProfileView: View {
     // Shared profile, updates when edited
     @Environment(ProfileStore.self) private var profileStore
     
+    // Opens edit sheet
+    @State private var showsEditSheet: Bool = false
+    
     var body: some View {
         ScrollView {
             VStack(spacing: Spacing.large) {
@@ -28,27 +31,39 @@ struct ProfileView: View {
         }
         .scrollBounceBehavior(.basedOnSize)
         .screenBackground()
+        .sheet(isPresented: $showsEditSheet) {
+            if let profile = profileStore.profile {
+                EditProfileView(profile: profile)
+            }
+        }
     }
     
     // Initials, name, age and max heart rate
     private func profileCard(_ profile: UserProfile) -> some View {
-        HStack(spacing: Spacing.medium) {
-            Text(profile.initials)
-                .font(.title2.bold())
-                .foregroundStyle(ColorToken.avatarText)
-                .frame(width: 64, height: 64)
-                .background(ColorToken.avatarBackground)
-                .clipShape(Circle())
-            
-            VStack(alignment: .leading, spacing: Spacing.small / 2) {
-                Text(profile.username)
-                    .font(.sectionTitle)
-                    .foregroundStyle(ColorToken.primaryText)
+        VStack(spacing: Spacing.medium) {
+            HStack(spacing: Spacing.medium) {
+                Text(profile.initials)
+                    .font(.title2.bold())
+                    .foregroundStyle(ColorToken.avatarText)
+                    .frame(width: 64, height: 64)
+                    .background(ColorToken.avatarBackground)
+                    .clipShape(Circle())
                 
-                Text("\(profile.age) years · Max HR \(profile.maxHeartRate) bpm")
-                    .font(.subheadline)
-                    .foregroundStyle(ColorToken.secondaryText)
+                VStack(alignment: .leading, spacing: Spacing.small / 2) {
+                    Text(profile.username)
+                        .font(.sectionTitle)
+                        .foregroundStyle(ColorToken.primaryText)
+                    
+                    Text("\(profile.age) years · Max HR \(profile.maxHeartRate) bpm")
+                        .font(.subheadline)
+                        .foregroundStyle(ColorToken.secondaryText)
+                }
+                
+                Spacer()
             }
+            
+            Button("Edit profile") { showsEditSheet = true }
+                .buttonStyle(.secondary)
         }
         .cardStyle()
     }
