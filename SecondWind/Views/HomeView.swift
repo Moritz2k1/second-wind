@@ -11,8 +11,10 @@ import Charts
 // Placeholder for main screen
 struct HomeView: View {
     
-    // Loaded once
-    private let profile: UserProfile? = UserProfile.loadProfile()
+    // Shared profile - updates when changed in Profile tab
+    @Environment(ProfileStore.self) private var profileStore
+    
+    private var profile: UserProfile? { profileStore.profile }
     
     // Owns Bluetooth connection while Home Screen exists
     @StateObject private var bluetooth: CoreBluetoothService = CoreBluetoothService()
@@ -233,7 +235,7 @@ struct HomeView: View {
         if bluetooth.isConnected {
             VStack(spacing: Spacing.medium) {
                 if runViewModel.state == .idle {
-                    Button("Start run") { runViewModel.start() }
+                    Button("Start run") { runViewModel.start(maxHeartRate: profileStore.maxHeartRate) }
                         .buttonStyle(.primary)
                 }
                 
@@ -274,5 +276,5 @@ private struct ConnectionPill: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView().environment(ProfileStore())
 }

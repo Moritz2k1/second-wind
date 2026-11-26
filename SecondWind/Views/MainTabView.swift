@@ -30,5 +30,5 @@ struct MainTabView: View {
 
 #Preview {
     MainTabView()
-        .modelContainer(.preview)
+        .modelContainer(.preview).environment(ProfileStore())
 }

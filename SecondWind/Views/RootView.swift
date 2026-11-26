@@ -29,5 +29,5 @@ struct RootView: View {
 
 #Preview {
     RootView()
-        .modelContainer(.preview)
+        .modelContainer(.preview).environment(ProfileStore())
 }

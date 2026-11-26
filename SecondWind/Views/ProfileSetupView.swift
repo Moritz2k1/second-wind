@@ -12,6 +12,9 @@ struct ProfileSetupView: View {
     // ViewModel holds all values and logic
     @State private var viewModel: ProfileSetupViewModel = ProfileSetupViewModel()
     
+    // Shared profile - saving here updates all screens
+    @Environment(ProfileStore.self) private var profileStore
+    
     var body: some View {
         ScrollView {
             VStack(spacing: Spacing.large) {
@@ -86,9 +89,8 @@ struct ProfileSetupView: View {
     /// Saves profile, afterwards app shows main screen
     private func saveProfile() {
         let profile: UserProfile = viewModel.createProfile()
-        profile.saveProfile()
+        profileStore.save(profile)
     }
-    
 }
 
 /// Title above card
@@ -117,5 +119,5 @@ private struct ProfileSection<Content: View>: View {
 }
 
 #Preview {
-    ProfileSetupView()
+    ProfileSetupView().environment(ProfileStore())
 }

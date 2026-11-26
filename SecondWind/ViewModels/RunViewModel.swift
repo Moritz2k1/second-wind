@@ -60,7 +60,7 @@ class RunViewModel {
     private var lastHeartRateDate: Date? = nil
     
     // Needed for zone boundaries in bpm
-    private let maxHeartRate: Int = UserProfile.loadProfile()?.maxHeartRate ?? 0
+    private var maxHeartRate: Int = 0
     
     // Meters run so far, without pauses
     private(set) var distanceMeters: Double = 0
@@ -139,11 +139,12 @@ class RunViewModel {
     }
     
     /// Starts new run with selected type and zone
-    func start() {
+    func start(maxHeartRate: Int) {
         guard state == .idle else { return }
         
         // Fresh values for new run
         startDate = .now
+        self.maxHeartRate = maxHeartRate
         accumulated = 0
         elapsed = 0
         activeSince = .now
