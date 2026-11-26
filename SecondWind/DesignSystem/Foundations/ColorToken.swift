@@ -46,6 +46,10 @@ extension Color {
     static let pillBackground: Color = ColorPalette.navy800
     static let pillText: Color = ColorPalette.white
     
+    // Avatar with initials
+    static let avatarBackground: Color = ColorPalette.teal.opacity(0.25)
+    static let avatarText: Color = ColorPalette.cyan
+    
     // Icons
     static let iconBackground: Color = ColorPalette.navy600.opacity(0.6)
     static let iconForeground: Color = ColorPalette.cyan
