@@ -50,6 +50,9 @@ class RunViewModel {
     // Last time zone time was counted
     private var lastZoneCheck: Date? = nil
     
+    // When strap sent last value
+    private var lastHeartRateDate: Date? = nil
+    
     // Needed for zone boundaries in bpm
     private let maxHeartRate: Int = UserProfile.loadProfile()?.maxHeartRate ?? 0
     
@@ -92,6 +95,7 @@ class RunViewModel {
         activeSince = .now
         timeInTargetZone = 0
         lastZoneCheck = .now
+        lastHeartRateDate = nil
         
         state = .active
         startTimer()
@@ -143,9 +147,13 @@ class RunViewModel {
         try? context.save()
     }
     
-    /// Called by view whenever strap sends new value
+    /// Called by service whenever strap sends new value
     func update(heartRate: Int) {
+        // Count time since last value, with heart rate that was valid in between
+        updateZoneTime()
+        
         self.heartRate = heartRate
+        lastHeartRateDate = .now
     }
     
     /// Calls tick every second until stopped
@@ -166,10 +174,19 @@ class RunViewModel {
         timerTask = nil
     }
     
-    /// Runs every second while active
+    /// Runs every second while active, only updates screen
     private func tick() {
         updateElapsed()
-        updateZoneTime()
+        clearStaleHeartRate()
+    }
+    
+    /// Shows "--" instead of old value when strap stopped sending
+    private func clearStaleHeartRate() {
+        guard let lastHeartRateDate else { return }
+        
+        if Date.now.timeIntervalSince(lastHeartRateDate) > Configuration.heartRateTimeout {
+            heartRate = 0
+        }
     }
     
     /// Run time = time before pause + time since resume
@@ -183,8 +200,11 @@ class RunViewModel {
         guard let lastZoneCheck else { return }
         
         let now: Date = .now
-        if isInTargetZone {
-            timeInTargetZone += now.timeIntervalSince(lastZoneCheck)
+        let gap: TimeInterval = now.timeIntervalSince(lastZoneCheck)
+        
+        // Long gap means no data from strap, heart rate unknown in between
+        if isInTargetZone && gap <= Configuration.heartRateTimeout {
+            timeInTargetZone += gap
         }
         
         self.lastZoneCheck = now
