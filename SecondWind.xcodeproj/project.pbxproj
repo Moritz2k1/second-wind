@@ -29,9 +29,22 @@
 		FA7838A43096967100A290AC /* SecondWindUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SecondWindUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		FA1FC77730B7B05E00AE8A83 /* Exceptions for "SecondWind" folder in "SecondWind" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = FA78388A3096967100A290AC /* SecondWind */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		FA78388D3096967100A290AC /* SecondWind */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FA1FC77730B7B05E00AE8A83 /* Exceptions for "SecondWind" folder in "SecondWind" target */,
+			);
 			path = SecondWind;
 			sourceTree = "<group>";
 		};
@@ -376,6 +389,7 @@
 				DEVELOPMENT_TEAM = T93Y7H8443;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SecondWind/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is used to connect to your heart rate chest strap";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Date of birth is read from Apple Health to estimate maximum heart rate";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -411,6 +425,7 @@
 				DEVELOPMENT_TEAM = T93Y7H8443;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SecondWind/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is used to connect to your heart rate chest strap";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Date of birth is read from Apple Health to estimate maximum heart rate";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
