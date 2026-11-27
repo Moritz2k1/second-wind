@@ -1,0 +1,32 @@
+27.11.2026, 19:12:14 [Bluetooth] Bluetooth ready
+27.11.2026, 19:13:40 [Bluetooth] Connected to Polar H10 BD64612D (foreground)
+27.11.2026, 19:14:38 [Run] Run started: Outdoor, zone 3, max HR 191, feedback on, every 30 secs, quiet at start 30 secs
+27.11.2026, 19:14:39 [Run] Heart rate 86 bpm, outside zone, feedback still quiet (foreground)
+27.11.2026, 19:15:09 [Audio] Speaking "Faster" at 98 bpm (foreground)
+27.11.2026, 19:15:09 [Run] Heart rate 99 bpm, outside zone (foreground)
+27.11.2026, 19:15:14 [Audio] Speech stuck, synthesizer reset
+27.11.2026, 19:15:14 [Audio] Safety release of audio
+27.11.2026, 19:15:24 [Run] Run ended, too short to save: 0:46, 0,0 km, 0 % in zone
+27.11.2026, 19:15:36 [Run] Run started: Outdoor, zone 3, max HR 191, feedback on, every 30 secs, quiet at start 30 secs
+27.11.2026, 19:15:37 [Run] Heart rate 87 bpm, outside zone, feedback still quiet (foreground)
+27.11.2026, 19:16:07 [Run] Heart rate 94 bpm, outside zone (foreground)
+27.11.2026, 19:16:07 [Audio] Speaking "Faster" at 94 bpm (foreground)
+27.11.2026, 19:16:39 [Run] Heart rate 91 bpm, outside zone (foreground)
+27.11.2026, 19:16:39 [Audio] Speaking "Faster" at 91 bpm (foreground)
+27.11.2026, 19:17:09 [Run] Heart rate 90 bpm, outside zone (background)
+27.11.2026, 19:17:09 [Audio] Speaking "Faster" at 90 bpm (background)
+27.11.2026, 19:17:39 [Run] Heart rate 90 bpm, outside zone (background)
+27.11.2026, 19:17:39 [Audio] Speaking "Faster" at 90 bpm (background)
+27.11.2026, 19:18:10 [Run] Heart rate 90 bpm, outside zone (foreground)
+27.11.2026, 19:18:10 [Audio] Speaking "Faster" at 90 bpm (foreground)
+27.11.2026, 19:18:41 [Run] Heart rate 84 bpm, outside zone (foreground)
+27.11.2026, 19:18:41 [Audio] Speaking "Faster" at 84 bpm (foreground)
+27.11.2026, 19:19:11 [Run] Heart rate 85 bpm, outside zone (background)
+27.11.2026, 19:19:12 [Audio] Speaking "Faster" at 85 bpm (background)
+27.11.2026, 19:19:42 [Run] Heart rate 88 bpm, outside zone (background)
+27.11.2026, 19:19:43 [Audio] Speaking "Faster" at 87 bpm (background)
+27.11.2026, 19:20:12 [Run] Heart rate 82 bpm, outside zone (foreground)
+27.11.2026, 19:20:14 [Audio] Speaking "Faster" at 76 bpm (foreground)
+27.11.2026, 19:20:43 [Run] Heart rate 85 bpm, outside zone (foreground)
+27.11.2026, 19:20:45 [Audio] Speaking "Faster" at 88 bpm (foreground)
+27.11.2026, 19:20:51 [Run] Run ended and saved: 5:14, 0,1 km, 0 % in zone
