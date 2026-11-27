@@ -16,6 +16,14 @@ enum RunState {
     case paused
 }
 
+/// Heart rate compared to target zone
+enum ZoneStatus {
+    case noSignal
+    case below(by: Int)
+    case inZone
+    case above(by: Int)
+}
+
 /// Distance reported by tracker
 private struct DistancePiece {
     let date: Date
@@ -98,6 +106,31 @@ class RunViewModel {
     var isInTargetZone: Bool {
         guard let targetZone, heartRate > 0, maxHeartRate > 0 else { return false }
         return targetZone.containsHR(HR: heartRate, maxHR: maxHeartRate)
+    }
+    
+    /// nil without zone or max heart rate
+    var targetRangeText: String? {
+        guard let targetZone, maxHeartRate > 0 else { return nil }
+        return RunFormat.heartRateRange(of: targetZone, maxHeartRate: maxHeartRate)
+    }
+    
+    /// In zone or how many bpm away from it
+    var zoneStatus: ZoneStatus {
+        guard let targetZone, heartRate > 0, maxHeartRate > 0 else { return .noSignal }
+        
+        if isInTargetZone {
+            return .inZone
+        }
+        
+        let lowest: Int = targetZone.calcMinHR(userMaxHR: maxHeartRate)
+        
+        // Not in zone and below lowest value means too slow
+        if heartRate < lowest {
+            return .below(by: lowest - heartRate)
+        }
+        
+        let highest: Int = targetZone.calcMaxHR(userMaxHR: maxHeartRate)
+        return .above(by: heartRate - highest)
     }
     
     /// Share of run in target zone so far
