@@ -56,8 +56,17 @@ struct ActiveRunView: View {
             title: runViewModel.runType.title,
             subtitle: runViewModel.state == .paused ? "Paused" : nil
         ) {
-            if let zone = runViewModel.targetZone {
-                ZoneBadge(zone: zone)
+            VStack(spacing: Spacing.small) {
+                if let zone = runViewModel.targetZone {
+                    ZoneBadge(zone: zone)
+                }
+                
+                // Personal bpm range of selected zone
+                if let range = runViewModel.targetRangeText {
+                    Text("Target \(range)")
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundStyle(ColorToken.secondaryText)
+                }
             }
         }
     }
@@ -73,16 +82,30 @@ struct ActiveRunView: View {
         runViewModel.heartRate > 0 ? "\(runViewModel.heartRate)" : "--"
     }
     
-    // Shows at a glance if user is in target zone
+    // In zone, or how far off and in which direction
     private var zoneStatus: some View {
-        let isInZone: Bool = runViewModel.isInTargetZone
-        
-        return Label(
-            isInZone ? "In target zone" : "Outside target zone",
-            systemImage: isInZone ? "checkmark.circle.fill" : "exclamationmark.circle"
-        )
-        .font(.subheadline)
-        .foregroundStyle(isInZone ? ColorToken.zoneStatusInside : ColorToken.zoneStatusOutside)
+        Label(statusText, systemImage: statusIcon)
+            .font(.subheadline.monospacedDigit())
+            .foregroundStyle(runViewModel.isInTargetZone ? ColorToken.zoneStatusInside : ColorToken.zoneStatusOutside)
+    }
+    
+    private var statusText: String {
+        switch runViewModel.zoneStatus {
+        case .noSignal: return "Waiting for heart rate"
+        case .below(let bpm): return "\(bpm) bpm below zone"
+        case .inZone: return "In target zone"
+        case .above(let bpm): return "\(bpm) bpm above zone"
+        }
+    }
+    
+    // Arrow points where heart rate should go
+    private var statusIcon: String {
+        switch runViewModel.zoneStatus {
+        case .noSignal: return "heart.slash"
+        case .below: return "arrow.up.circle.fill"
+        case .inZone: return "checkmark.circle.fill"
+        case .above: return "arrow.down.circle.fill"
+        }
     }
     
     private var statsRow: some View {
