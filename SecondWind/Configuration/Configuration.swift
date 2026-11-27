@@ -53,6 +53,18 @@ struct Configuration {
     static let feedbackIntervalOptions: [TimeInterval] = [30, 60, 120]
     static let feedbackWarmupOptions: [TimeInterval] = [30, 60, 120]
     
+    // If audio could not start, try again after this many seconds
+    static let feedbackRetryDelay: TimeInterval = 5
+    
+    // Audio session is released at the latest after this, even if speech got stuck
+    static let speechTimeout: TimeInterval = 5
+    
+    // How often heart rate is written to the log during a run
+    static let heartRateLogInterval: TimeInterval = 30
+    
+    // Older log entries are removed
+    static let maxLogEntries: Int = 500
+    
     // Allowed values for own max heart rate (bpm)
     static let customMaxHeartRateRange: ClosedRange<Int> = 120...230
 }
