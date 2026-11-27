@@ -243,6 +243,8 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         if central.state != .poweredOn {
             resetConnectionValues()
         }
+        
+        AppLog.shared.add(statusText, category: .bluetooth)
     }
     
     /// Called when device has been found
@@ -278,6 +280,7 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         statusText = "Connected"
         isConnected = true
         isUserDisconnect = false
+        AppLog.shared.add("Connected to \(deviceName ?? "strap") (\(AppLog.appState))", category: .bluetooth)
         peripheral.delegate = self
         
         // Search for HR Services
@@ -292,18 +295,21 @@ extension CoreBluetoothService: CBCentralManagerDelegate {
         if isUserDisconnect {
             isUserDisconnect = false
             statusText = "Disconnected"
+            AppLog.shared.add("Disconnected by user", category: .bluetooth)
             return
         }
         
         // Lost by accident - iOS connects again once strap is back
         statusText = "Reconnecting..."
         centralManager.connect(peripheral)
+        AppLog.shared.add("Connection lost (\(AppLog.appState)), reconnecting: \(error?.localizedDescription ?? "no error")", category: .bluetooth)
     }
     
     /// Connection attempt didn't work
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         statusText = "Could not connect"
         resetConnectionValues()
+        AppLog.shared.add("Could not connect: \(error?.localizedDescription ?? "no error")", category: .bluetooth)
     }
 }
 

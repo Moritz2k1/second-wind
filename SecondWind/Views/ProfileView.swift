@@ -35,6 +35,9 @@ struct ProfileView: View {
     // Asks before deleting
     @State private var showsDeleteConfirmation: Bool = false
     
+    // Opens log sheet
+    @State private var showsLogs: Bool = false
+    
     var body: some View {
         ScrollView {
             VStack(spacing: Spacing.large) {
@@ -58,6 +61,9 @@ struct ProfileView: View {
             if let profile = profileStore.profile {
                 EditProfileView(profile: profile)
             }
+        }
+        .sheet(isPresented: $showsLogs) {
+            LogView()
         }
         .confirmationDialog("Delete all runs?", isPresented: $showsDeleteConfirmation, titleVisibility: .visible) {
             Button("Delete all runs", role: .destructive) {
@@ -211,6 +217,10 @@ struct ProfileView: View {
             Text("Second Wind is not a medical device. Zones are estimates.")
                 .font(.footnote)
                 .foregroundStyle(ColorToken.secondaryText)
+            
+            // What happened during runs, e.g. audio or connection problems
+            Button("Show logs") { showsLogs = true }
+                .buttonStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()

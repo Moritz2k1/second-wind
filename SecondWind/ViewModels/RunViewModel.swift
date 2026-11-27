@@ -80,6 +80,9 @@ class RunViewModel {
     // Set on start from user settings
     private var isFeedbackEnabled: Bool = true
     
+    // Heart rate is logged now and then, not every second
+    private var lastHeartRateLog: Date = .distantPast
+    
     /// Zone matching selected id
     var targetZone: TrainingZone? {
         for zone in TrainingZone.zones {
@@ -156,6 +159,7 @@ class RunViewModel {
         timeInTargetZone = 0
         lastZoneCheck = .now
         lastHeartRateDate = nil
+        lastHeartRateLog = .distantPast
         distanceMeters = 0
         recentPieces = []
         
@@ -171,6 +175,11 @@ class RunViewModel {
         
         state = .active
         startTimer()
+        
+        AppLog.shared.add(
+            "Run started: \(runType.shortTitle), zone \(targetZoneId), max HR \(maxHeartRate), feedback \(isFeedbackEnabled ? "on" : "off"), every \(RunFormat.setting(feedbackSettings.interval)), quiet at start \(RunFormat.setting(feedbackSettings.warmup))",
+            category: .run
+        )
     }
     
     /// Pauses run
@@ -188,6 +197,8 @@ class RunViewModel {
         feedback.stop()
         state = .paused
         stopTimer()
+        
+        AppLog.shared.add("Run paused at \(RunFormat.clock(elapsed))", category: .run)
     }
     
     /// Continues paused run
@@ -207,6 +218,8 @@ class RunViewModel {
         
         state = .active
         startTimer()
+        
+        AppLog.shared.add("Run resumed", category: .run)
     }
     
     /// Finishes run
@@ -224,11 +237,17 @@ class RunViewModel {
         state = .idle
         stopTimer()
         
+        let summary: String = "\(RunFormat.clock(elapsed)), \(RunFormat.distance(distanceKm)) km, \(RunFormat.percent(timeInZoneRatio)) in zone"
+        
         // Too short runs are dropped
-        guard let run = makeRun() else { return }
+        guard let run = makeRun() else {
+            AppLog.shared.add("Run ended, too short to save: \(summary)", category: .run)
+            return
+        }
         
         context.insert(run)
         try? context.save()
+        AppLog.shared.add("Run ended and saved: \(summary)", category: .run)
     }
     
     /// Called by service whenever strap sends new value
@@ -238,11 +257,25 @@ class RunViewModel {
         
         self.heartRate = heartRate
         lastHeartRateDate = .now
+        logHeartRateIfDue()
         
         // Only during active run
         if isFeedbackEnabled, state == .active, Date.now >= feedbackQuietUntil, let targetZone, maxHeartRate > 0 {
             feedback.evaluate(currentHR: heartRate, zone: targetZone, userMaxHR: maxHeartRate)
         }
+    }
+    
+    /// Writes heart rate to log every few seconds during run, shows if data arrives while locked
+    private func logHeartRateIfDue() {
+        guard state == .active, Date.now.timeIntervalSince(lastHeartRateLog) >= Configuration.heartRateLogInterval else { return }
+        
+        lastHeartRateLog = .now
+        
+        let quiet: Bool = Date.now < feedbackQuietUntil
+        AppLog.shared.add(
+            "Heart rate \(heartRate) bpm, \(isInTargetZone ? "in" : "outside") zone\(quiet ? ", feedback still quiet" : "") (\(AppLog.appState))",
+            category: .run
+        )
     }
     
     /// Calls tick every second until stopped
