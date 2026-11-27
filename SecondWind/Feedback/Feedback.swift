@@ -26,6 +26,12 @@ class Feedback: NSObject {
     // Releases audio session if speech never reports back
     private var releaseTask: Task<Void, Never>? = nil
     
+    // Audio session calls can block, so they run in order on their own queue, not on main thread
+    private let audioQueue: DispatchQueue = DispatchQueue(label: "SecondWind.audio")
+    
+    // Increased by stop(), message waiting for audio is dropped if it changed
+    private var speechGeneration: Int = 0
+    
     override init() {
         super.init()
         
@@ -59,6 +65,9 @@ class Feedback: NSObject {
     
     /// Stops current message and gives audio back to other apps
     func stop() {
+        // Message still waiting for audio won't be spoken anymore
+        speechGeneration += 1
+        
         if synthesizer.isSpeaking {
             resetSynthesizer()
         }
@@ -75,20 +84,34 @@ class Feedback: NSObject {
             resetSynthesizer()
         }
         
-        // System may have reset configuration in the meantime
-        configureSession()
+        // Blocks new attempts while audio is starting
+        lastFeedback = Date()
+        let generation: Int = speechGeneration
         
-        // Music gets quieter - if this fails, speaking would get stuck
-        do {
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            AppLog.shared.add("Audio could not start (\(AppLog.appState)): \(error.localizedDescription)", category: .audio)
+        Task { [weak self] in
+            guard let self else { return }
             
-            // Try again soon instead of after full interval
-            lastFeedback = Date().addingTimeInterval(Configuration.feedbackRetryDelay - interval)
-            return
+            // Music gets quieter - waits on audio queue, main thread stays free
+            if let error = await self.activateSession() {
+                AppLog.shared.add("Audio could not start (\(AppLog.appState)): \(error)", category: .audio)
+                
+                // Try again soon instead of after full interval
+                self.lastFeedback = Date().addingTimeInterval(Configuration.feedbackRetryDelay - self.interval)
+                return
+            }
+            
+            // Paused or ended while audio was starting
+            guard generation == self.speechGeneration else {
+                self.deactivateSession()
+                return
+            }
+            
+            self.say(message, heartRate: heartRate)
         }
-        
+    }
+    
+    /// Speaks message once audio is ready
+    private func say(_ message: String, heartRate: Int) {
         let speech = AVSpeechUtterance(string: message)
         speech.voice = AVSpeechSynthesisVoice(language: "en-US")
         speech.rate = 0.45
@@ -96,22 +119,50 @@ class Feedback: NSObject {
         
         currentUtterance = speech
         synthesizer.speak(speech)
-        lastFeedback = Date()
         
         AppLog.shared.add("Speaking \"\(message)\" at \(heartRate) bpm (\(AppLog.appState))", category: .audio)
         scheduleSafetyRelease()
     }
     
-    /// Playback over music, works with locked screen
+    /// Playback over music, works with locked screen - runs on audio queue
+    nonisolated private static func applyCategory() throws {
+        try AVAudioSession.sharedInstance().setCategory(
+            .playback,
+            mode: .voicePrompt,
+            options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
+        )
+    }
+    
+    /// Sets up audio without starting it, e.g. at app start
     private func configureSession() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playback,
-                mode: .voicePrompt,
-                options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
-            )
-        } catch {
-            AppLog.shared.add("Audio category could not be set: \(error.localizedDescription)", category: .audio)
+        audioQueue.async {
+            do {
+                try Feedback.applyCategory()
+            } catch {
+                let text: String = error.localizedDescription
+                Task { @MainActor in
+                    AppLog.shared.add("Audio category could not be set: \(text)", category: .audio)
+                }
+            }
+        }
+    }
+    
+    /// Sets category and starts audio, returns error text if it failed
+    private func activateSession() async -> String? {
+        let queue: DispatchQueue = audioQueue
+        
+        // Waits until audio queue is done, without blocking main thread
+        return await withCheckedContinuation { continuation in
+            queue.async {
+                do {
+                    // System may have reset configuration in the meantime
+                    try Feedback.applyCategory()
+                    try AVAudioSession.sharedInstance().setActive(true)
+                    continuation.resume(returning: nil)
+                } catch {
+                    continuation.resume(returning: error.localizedDescription)
+                }
+            }
         }
     }
     
@@ -121,10 +172,16 @@ class Feedback: NSObject {
         releaseTask = nil
         currentUtterance = nil
         
-        do {
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        } catch {
-            AppLog.shared.add("Audio could not be released: \(error.localizedDescription)", category: .audio)
+        // Doesn't wait, same queue keeps order with next activation
+        audioQueue.async {
+            do {
+                try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            } catch {
+                let text: String = error.localizedDescription
+                Task { @MainActor in
+                    AppLog.shared.add("Audio could not be released: \(text)", category: .audio)
+                }
+            }
         }
     }
     
